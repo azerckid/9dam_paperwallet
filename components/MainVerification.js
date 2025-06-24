@@ -1,16 +1,10 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 
 import Center from "./Center";
 import OldSecretNumber from "./OldSecretNumber";
 import NewSecretNumber from "./NewSecretNumber";
 import TitleDescription from "./TitleDescription";
 import Scanner from "./QRcodeReader";
-
-const StyledSecretNumberBox = styled.div`
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-`;
 
 export default function Verification() {
     const [walletAccount, setWalletAccount] = useState('');
@@ -53,14 +47,12 @@ export default function Verification() {
                 getNewAccount={getNewAccount}>
             </Scanner>
 
-            <StyledSecretNumberBox >
-                <div>OldSecretNumber를 차례대로 입력하셔야 새로운 비밀번호를 만들 수 있습니다.</div>
-                <OldSecretNumber
-                    address={walletAccount}
-                    checkOldSecretNumberExists={checkOldSecretNumberExists} // 이 함수를 OldSecretNumber 컴포넌트에 전달합니다.
-                    AllPasswordCorrect={AllPasswordCorrect}
-                />
-            </StyledSecretNumberBox>
+            <div>OldSecretNumber를 차례대로 입력하셔야 새로운 비밀번호를 만들 수 있습니다.</div>
+            <OldSecretNumber
+                address={walletAccount}
+                checkOldSecretNumberExists={checkOldSecretNumberExists} // 이 함수를 OldSecretNumber 컴포넌트에 전달합니다.
+                AllPasswordCorrect={AllPasswordCorrect}
+            />
 
             {/* <StyledSecretNumberBox>
                 <div>The address already exists in the database.</div>
@@ -71,11 +63,11 @@ export default function Verification() {
             {/* 처음 등록하는 주소면 새로운 비번 등록창 보이도록 */}
             {/* 기존비번을 다 맞게 입력했으면 새로운 비번 등록창 보이도록 */}
             {handleAllPassword && (
-                <StyledSecretNumberBox>
+                <div>
                     <NewSecretNumber
                         address={walletAccount}
                     />
-                </StyledSecretNumberBox>
+                </div>
             )}
         </Center >
     )

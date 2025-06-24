@@ -1,20 +1,4 @@
 import { useState } from "react";
-import styled from "styled-components";
-
-const StyledInputBox = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    input {
-        width: 300px;
-        margin: 10px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-`;
 
 // fix camera input
 export default function WalletAccount() {
@@ -22,7 +6,6 @@ export default function WalletAccount() {
     const onAccountChange = (e) => {
         setAccount(e.target.value);
     }
-    console.log(account);
     const onSubmit = (e) => {
         e.preventDefault();
         fetch('/api/wallet/setWalletAccount', {
@@ -33,19 +16,23 @@ export default function WalletAccount() {
             body: JSON.stringify(account)
         })
         setAccount("");
-
     }
     return (
-        <StyledInputBox>
-            <form onSubmit={onSubmit}>
+        <div className="flex flex-col justify-center items-center gap-4">
+            <form onSubmit={onSubmit} className="flex flex-col items-center gap-4">
                 <input
+                    className="w-72 my-2 p-2 border border-gray-300 rounded"
                     type="text"
                     value={account}
                     onChange={onAccountChange}
                     placeholder="Enter Account"
                 />
-                <input type="submit" value="Account Confirm" />
+                <input
+                    className="w-72 my-2 p-2 bg-gray-300 border-none rounded cursor-pointer"
+                    type="submit"
+                    value="Account Confirm"
+                />
             </form>
-        </StyledInputBox >
+        </div>
     )
 }

@@ -11,6 +11,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      {/* Tailwind CSS 유틸리티 클래스를 각 컴포넌트에서 사용하세요. */}
       <Header />
       <Verification />
     </>

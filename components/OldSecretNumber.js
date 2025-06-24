@@ -1,21 +1,5 @@
 import { useEffect, useState } from "react";
 import { sha256 } from "js-sha256";
-import styled from "styled-components";
-
-const StyledInputBox = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    input {
-        width: 300px;
-        margin: 10px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-`;
 
 export default function OldSecretNumber({ address, getAllPasswordCorrect, checkOldSecretNumberExists, AllPasswordCorrect }) {
     const [walletId, setWalletId] = useState(null);
@@ -153,7 +137,7 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
     // todo : 비밀번호가 모두 일치한다면 getAllPasswordCorrect를 true로 변경
 
     return (
-        <StyledInputBox>
+        <div className="flex flex-col justify-center">
             {passwords.map((item, idx) => {
                 return (
                     <div key={idx}>
@@ -176,6 +160,6 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
                 )
             })}
             {error && <p>{error}</p>}
-        </StyledInputBox>
+        </div>
     )
 }
