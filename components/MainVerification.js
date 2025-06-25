@@ -15,7 +15,7 @@ export default function Verification() {
     const [scannerOn, setScannerOn] = useState(false); // QR 스캐너 ON/OFF 상태
     // 추가: 새 비번 생성 UI 표시 여부와 몇번째 비번 생성인지
     const [showNewSecret, setShowNewSecret] = useState(false);
-    const [newSecretIndex, setNewSecretIndex] = useState(1);
+    const [passwordCount, setPasswordCount] = useState(0);
 
     const getWalletAccount = (data) => {
         setWalletAccount(data);
@@ -23,7 +23,7 @@ export default function Verification() {
         if (data && isValidBitcoinAddress(data)) {
             setScannerOn(false); // 스캔 성공 시 카메라 OFF
             setShowNewSecret(false);
-            setNewSecretIndex(1);
+            setPasswordCount(0);
         }
     }
     const checkOldSecretNumberExists = (exists) => {
@@ -31,7 +31,7 @@ export default function Verification() {
     }
     const AllPasswordCorrect = (isCorrect, count) => {
         if (isCorrect) {
-            setNewSecretIndex(count + 1); // 기존 비번 개수 + 1번째부터 시작
+            setPasswordCount(count);
             setShowNewSecret(true);
         }
     };
@@ -49,7 +49,7 @@ export default function Verification() {
                 // QR Scan ON: 모든 상태 초기화
                 setWalletAccount('');
                 setShowNewSecret(false);
-                setNewSecretIndex(1);
+                setPasswordCount(0);
                 setOldSecretNumberExists(false);
                 setHandleAllPassword(false);
                 setNewAccount(false);
@@ -93,11 +93,10 @@ export default function Verification() {
                     )}
                     {showNewSecret && (
                         <div className="flex flex-col items-center mt-8">
-                            <div className="mb-2 text-lg font-semibold">{newSecretIndex}번째 비번 생성</div>
                             <NewSecretNumber
                                 address={walletAccount}
-                                onSuccess={() => setNewSecretIndex(prev => prev + 1)}
-                                index={newSecretIndex}
+                                onSuccess={() => setPasswordCount(prev => prev + 1)}
+                                index={passwordCount}
                             />
                         </div>
                     )}
