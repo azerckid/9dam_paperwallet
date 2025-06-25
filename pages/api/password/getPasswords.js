@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { supabase } from '@/libs/supabaseClient';
 
 export default async function handler(req, res) {
     try {
@@ -14,22 +12,20 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'WalletAccountId is required' });
         }
 
-        // 해당 walletAccountId에 대한 모든 비밀번호 조회
-        const passwords = await prisma.password.findMany({
-            where: {
-                walletAccountId: parseInt(walletAccountId, 10),
-            },
-            select: {
-                password: true,
-                createdAt: true,
-                updatedAt: true,
-                // 다른 필요한 필드를 여기에 추가
-            }
-        });
+        // 해당 walletAccountId에 대한 모든 비밀번호를 생성순(오래된 순)으로 조회
+        const { data, error } = await supabase
+            .from('passwords')
+            .select('password, created_at, updated_at')
+            .eq('wallet_account_id', walletAccountId)
+            .order('created_at', { ascending: true });
+        if (error) {
+            console.error('Supabase select error:', error);
+            return res.status(500).json({ error: error.message });
+        }
 
         // 결과 반환
-        res.status(200).json(passwords);
-        console.log("passwords", passwords);
+        res.status(200).json(data);
+        console.log("passwords", data);
     } catch (error) {
         console.error('Error retrieving passwords:', error);
         res.status(500).json({ error: 'Internal server error' });

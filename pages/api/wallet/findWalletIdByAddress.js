@@ -1,32 +1,24 @@
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
+import { supabase } from '@/libs/supabaseClient';
 
 export default async function findWalletIdByAddress(req, res) {
-
     try {
-        console.log('req.body', req.body);
         const { account } = req.body;
-        console.log('account', account);
         if (!account) {
             return res.status(400).json({ error: 'Account is required' });
         }
-        const walletAccount = await prisma.walletAccount.findUnique({
-            where: {
-                account: account
-            },
-            select: {
-                id: true
-            }
-        });
-        if (walletAccount) {
-            console.log('walletAccount', walletAccount);
-            res.status(200).json(walletAccount.id);
-        } else {
-            res.status(404).json({ message: "Wallet account not found" });
+        const { data, error } = await supabase
+            .from('wallet_accounts')
+            .select('id')
+            .eq('account', account)
+            .single();
+        if (error && error.code !== 'PGRST116') { // PGRST116: No rows found
+            return res.status(500).json({ error: error.message });
         }
+        if (!data) {
+            return res.status(404).json({ message: 'Wallet account not found' });
+        }
+        res.status(200).json(data.id);
     } catch (error) {
-        console.error('Error finding wallet ID:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 }

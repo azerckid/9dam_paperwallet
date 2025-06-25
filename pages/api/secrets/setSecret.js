@@ -1,22 +1,19 @@
-import prismaClient from "@/libs/prismaClient";
+import { supabase } from '@/libs/supabaseClient';
 
 export default async function handler(req, res) {
     try {
-        console.log("newSecret.req.body", req.body);
         const { password, walletAccountId } = req.body;
         if (!password || !walletAccountId) {
-            return res.status(400).json({ error: "Invalid request body" });
+            return res.status(400).json({ error: 'Missing password or walletAccountId' });
         }
-        const result = await prismaClient.password.create({
-            data: {
-                password,
-                walletAccountId
-            }
-        });
-        res.status(200).json({ ok: true });
+        const { data, error } = await supabase
+            .from('passwords')
+            .insert([{ password, wallet_account_id: walletAccountId }]);
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+        res.status(200).json({ ok: true, data });
     } catch (error) {
-        console.error("An error occurred:", error);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: 'Internal server error' });
     }
-
 }

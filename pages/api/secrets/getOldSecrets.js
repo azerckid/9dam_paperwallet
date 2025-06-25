@@ -1,16 +1,17 @@
-import prismaClient from "@/libs/prismaClient";
+import { supabase } from '@/libs/supabaseClient';
 
 export default async function handler(req, res) {
     try {
-        const result = await prismaClient.walletAccount.findMany({
-            select: {
-                account: true,
-            },
-        });
-        console.log(result);
-        res.status(200).json({ ok: true });
+        const { data, error } = await supabase
+            .from('wallet_accounts')
+            .select('account');
+        if (error) {
+            console.error('Supabase select error:', error);
+            return res.status(500).json({ error: error.message });
+        }
+        res.status(200).json({ ok: true, accounts: data });
     } catch (error) {
-        console.error("An error occurred:", error);
-        res.status(500).json({ error: "Internal server error" });
+        console.error('An error occurred:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 }

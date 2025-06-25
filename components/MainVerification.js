@@ -5,28 +5,37 @@ import OldSecretNumber from "./OldSecretNumber";
 import NewSecretNumber from "./NewSecretNumber";
 import TitleDescription from "./TitleDescription";
 import Scanner from "./QRcodeReader";
+import isValidBitcoinAddress from '../utils/CheckAddress';
 
 export default function Verification() {
     const [walletAccount, setWalletAccount] = useState('');
     const [oldSecretNumberExists, setOldSecretNumberExists] = useState(false); // null로 초기화하여 아직 확인되지 않음을 나타냅니다.
     const [handleAllPassword, setHandleAllPassword] = useState(false);
     const [newAccount, setNewAccount] = useState(false);
+    const [scannerOn, setScannerOn] = useState(false); // QR 스캐너 ON/OFF 상태
+    // 추가: 새 비번 생성 UI 표시 여부와 몇번째 비번 생성인지
+    const [showNewSecret, setShowNewSecret] = useState(false);
+    const [newSecretIndex, setNewSecretIndex] = useState(1);
 
     const getWalletAccount = (data) => {
         setWalletAccount(data);
+        // 형식이 맞는 주소일 때만 카메라 OFF 및 다음 단계 진행
+        if (data && isValidBitcoinAddress(data)) {
+            setScannerOn(false); // 스캔 성공 시 카메라 OFF
+            setShowNewSecret(false);
+            setNewSecretIndex(1);
+        }
         // console.log("walletAccount-from-QRscanner", data);
         // console.log("walletAccount-from-QRscanner", typeof data)
     }
     const checkOldSecretNumberExists = (exists) => {
         setOldSecretNumberExists(exists);
     }
-    const AllPasswordCorrect = (isCorrect) => {
-        setHandleAllPassword(isCorrect);
-        // 여기서 isCorrect가 true일 경우, 즉 모든 비밀번호가 올바를 때 원하는 로직을 실행합니다.
-        // 예: 사용자에게 성공 메시지를 표시하거나, 다음 폼으로 네비게이션 하는 등
+    const AllPasswordCorrect = (isCorrect, count) => {
+        console.log('AllPasswordCorrect 호출됨, 값:', isCorrect, 'count:', count);
         if (isCorrect) {
-            // 모든 비밀번호가 정확하다는 메시지 표시 또는 다른 액션 실행
-            console.log("모든 비밀번호가 정확합니다. 다음 단계로 진행하세요.");
+            setNewSecretIndex(count + 1); // 기존 비번 개수 + 1번째부터 시작
+            setShowNewSecret(true);
         }
     };
     const getNewAccount = (data) => {
@@ -35,40 +44,71 @@ export default function Verification() {
         // console.log("newAccount", typeof data)
     }
     useEffect(() => {
+        console.log("showNewSecret 값:", showNewSecret);
+    }, [showNewSecret]);
 
-    }, [handleAllPassword]);
+    // QR Scan ON/OFF 토글 핸들러: 상태 모두 초기화
+    const handleScannerToggle = () => {
+        setScannerOn((prev) => {
+            const next = !prev;
+            if (next) {
+                // QR Scan ON: 모든 상태 초기화
+                setWalletAccount('');
+                setShowNewSecret(false);
+                setNewSecretIndex(1);
+                setOldSecretNumberExists(false);
+                setHandleAllPassword(false);
+                setNewAccount(false);
+            }
+            return next;
+        });
+    };
 
     return (
         <Center>
             <TitleDescription />
-            {/* Todo : 버튼으로 카메라를 열고,어카운트 입력이 완료되면, 카메라 창 닫아야함. */}
-            <Scanner
-                getWalletAccount={getWalletAccount}
-                getNewAccount={getNewAccount}>
-            </Scanner>
-
-            <div>OldSecretNumber를 차례대로 입력하셔야 새로운 비밀번호를 만들 수 있습니다.</div>
-            <OldSecretNumber
-                address={walletAccount}
-                checkOldSecretNumberExists={checkOldSecretNumberExists} // 이 함수를 OldSecretNumber 컴포넌트에 전달합니다.
-                AllPasswordCorrect={AllPasswordCorrect}
-            />
-
-            {/* <StyledSecretNumberBox>
-                <div>The address already exists in the database.</div>
-                <NewSecretNumber
-                    address={walletAccount}
-                ></NewSecretNumber>
-            </StyledSecretNumberBox> */}
-            {/* 처음 등록하는 주소면 새로운 비번 등록창 보이도록 */}
-            {/* 기존비번을 다 맞게 입력했으면 새로운 비번 등록창 보이도록 */}
-            {handleAllPassword && (
-                <div>
-                    <NewSecretNumber
-                        address={walletAccount}
+            {/* QR 스캐너 ON/OFF 토글 버튼 */}
+            <button
+                className="my-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                onClick={handleScannerToggle}
+            >
+                {scannerOn ? 'QR Scan OFF' : 'QR Scan ON'}
+            </button>
+            {/* QR 스캐너가 ON일 때는 address 등 모든 정보 숨김 */}
+            {scannerOn ? (
+                <div className="flex flex-col items-center">
+                    <div className="mb-4 text-lg font-semibold">지갑 QR CODE를 스캔해주세요</div>
+                    <Scanner
+                        getWalletAccount={getWalletAccount}
+                        getNewAccount={getNewAccount}
                     />
                 </div>
+            ) : (
+                <>
+                    {/* 스캔된 주소가 있으면 버튼 아래에 표시 */}
+                    {walletAccount && (
+                        <div className="my-2 text-base font-semibold">address : {walletAccount}</div>
+                    )}
+                    {/* address, 안내문구, OldSecretNumber 등 기존 UI */}
+                    {!showNewSecret && (
+                        <OldSecretNumber
+                            address={walletAccount}
+                            checkOldSecretNumberExists={checkOldSecretNumberExists}
+                            AllPasswordCorrect={AllPasswordCorrect}
+                        />
+                    )}
+                    {showNewSecret && (
+                        <div className="flex flex-col items-center mt-8">
+                            <div className="mb-2 text-lg font-semibold">{newSecretIndex}번째 비번 생성</div>
+                            <NewSecretNumber
+                                address={walletAccount}
+                                onSuccess={() => setNewSecretIndex(prev => prev + 1)}
+                                index={newSecretIndex}
+                            />
+                        </div>
+                    )}
+                </>
             )}
-        </Center >
+        </Center>
     )
 }

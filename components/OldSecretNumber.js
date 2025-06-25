@@ -2,81 +2,37 @@ import { useEffect, useState } from "react";
 import { sha256 } from "js-sha256";
 
 export default function OldSecretNumber({ address, getAllPasswordCorrect, checkOldSecretNumberExists, AllPasswordCorrect }) {
+    if (!address) return null;
     const [walletId, setWalletId] = useState(null);
     const [passwords, setPasswords] = useState([]);
-    const [inputPasswords, setInputPasswords] = useState([]);
+    const [inputValues, setInputValues] = useState([]);
+    const [submitResults, setSubmitResults] = useState([]);
     const [error, setError] = useState('');
+    const [response, setResponse] = useState(null);
+    const [showPassword, setShowPassword] = useState(false);
+    const [currentStep, setCurrentStep] = useState(0);
+    const [isAllCorrect, setIsAllCorrect] = useState(false);
 
     const [password, setPassword] = useState("");
     const [hashing, setHashing] = useState("");
     const [passwordValidationResults, setPasswordValidationResults] = useState([]);
 
-
-    const onPasswordChange = (e, idx) => {
+    const onPasswordChange = (e) => {
         const newPassword = e.target.value;
-        console.log("e.target.value", e.target.value);
-        console.log("newPassword", newPassword);
-        console.log("password", password);
         setPassword(newPassword);
         const hash = sha256(newPassword);
-        console.log("hash=================", hash);
         setHashing(hash);
-        console.log("hashing============", hashing);
-        console.log("passwords================", passwords);
-        console.log("passwords[idx]================", passwords[idx]);
-        // setInputPasswords([...inputPasswords, hash]);
-
-        if (passwords[idx].password === hash.toString()) {
-            console.log("hashing+++++++++++++", hashing);
-            console.log("hash++++++++++++", hash);
-            arrayInputPasswords(hash);
-            handleAllPasswordCorrect();
-        }
-
     }
+
     const arrayInputPasswords = (hashing) => {
-        setInputPasswords([...inputPasswords, hashing]);
+        setInputValues([...inputValues, hashing]);
     }
 
     const handleAllPasswordCorrect = () => {
-        console.log("passwords.length++++++++++++++", passwords.length);
-        console.log("inputPasswords.length++++++++++++", inputPasswords.length);
-        // inputPasswords.length 다시 확인 필요합니다.
-        if (passwords.length === inputPasswords.length + 1) {
-            AllPasswordCorrect(true);
+        if (typeof AllPasswordCorrect === 'function') {
+            AllPasswordCorrect(true, passwords.length);
         }
     }
-
-    // const handlePasswordChange = (index, e) => {
-    //     console.log("index", index);
-    //     console.log("e.target.value", e.target.value);
-    //     const updatedInputPasswords = [...inputPasswords];
-    //     updatedInputPasswords[index] = e.target.value;
-    //     setInputPasswords(updatedInputPasswords);
-
-    //     if (password[idx] === inputPasswords[idx]) {
-    //         return true;
-    //     };
-
-    //     // 입력된 비밀번호를 해시 처리
-    //     const hashedInput = sha256(e.target.value);
-    //     const updatedValidationResults = [...passwordValidationResults];
-    //     updatedValidationResults[index] = passwords[index] === hashedInput;
-    //     setPasswordValidationResults(updatedValidationResults);
-
-    //     // 모든 비밀번호가 올바른지 확인
-    //     handleAllPasswordCorrect(updatedValidationResults.every(result => result));
-    //     // handleAllPasswordCorrect(false);
-    // };
-
-    // const verifyPasswords = () => {
-    //     const results = passwords.map((storedPassword, index) => storedPassword === inputPasswords[index]);
-    //     setPasswordValidationResults(results);
-    //     const allCorrect = results.every((result) => result === true);
-    //     // getAllPasswordCorrect(allCorrect);
-    //     // checkOldSecretNumberExists(passwords.length > 0);
-    //     checkOldSecretNumberExists(true);
-    // };
 
     const getWalletId = async () => {
         try {
@@ -84,7 +40,7 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
                 return;
             }
             const response = await fetch('/api/wallet/findWalletIdByAddress', {
-                method: 'POST', // API 요구사항에 따라 변경
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -118,9 +74,68 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
             }
             const data = await response.json();
             setPasswords(data);
-            console.log("data", data);
         } catch (error) {
             setError('Error fetching passwords: ' + error.message);
+        }
+    };
+
+    const saveSecret = async (e) => {
+        e.preventDefault();
+        try {
+            if (!password) {
+                setError('비밀번호를 입력하세요.');
+                return;
+            }
+            const response = await fetch('/api/secrets/setSecret', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password: hashing, walletAccountId: walletId }),
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            if (data) {
+                setResponse(data);
+                if (getAllPasswordCorrect) getAllPasswordCorrect();
+            } else {
+                setError('Secret not saved');
+            }
+        } catch (error) {
+            setError(error.message);
+        }
+    }
+
+    const handleInputChange = (idx, value) => {
+        const newValues = [...inputValues];
+        newValues[idx] = value;
+        setInputValues(newValues);
+    };
+
+    const handlePasswordSubmit = (idx, e) => {
+        e.preventDefault();
+        const input = inputValues[idx] || '';
+        const hashedInput = sha256(input);
+        const hashed = passwords[idx].password;
+        if (hashedInput === hashed) {
+            const newResults = [...submitResults];
+            newResults[idx] = '올바른 비밀번호입니다.';
+            setSubmitResults(newResults);
+        } else {
+            const newResults = [...submitResults];
+            newResults[idx] = '올바른 비번을 입력하세요.';
+            setSubmitResults(newResults);
+        }
+    };
+
+    const handleNextStep = () => {
+        if (currentStep < passwords.length - 1) {
+            setCurrentStep(currentStep + 1);
+        } else {
+            setIsAllCorrect(true);
+            handleAllPasswordCorrect();
         }
     };
 
@@ -134,32 +149,87 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
         }
     }, [walletId]);
 
-    // todo : 비밀번호가 모두 일치한다면 getAllPasswordCorrect를 true로 변경
-
-    return (
-        <div className="flex flex-col justify-center">
-            {passwords.map((item, idx) => {
-                return (
-                    <div key={idx}>
-                        <span>{idx + 1}번째 비밀번호:</span>
+    // 비밀번호가 없는 주소(최초 등록)일 때 UI
+    if (passwords.length === 0) {
+        return (
+            <div className="flex flex-col items-center gap-4">
+                <div className="mb-2 text-base font-semibold text-blue-700">해당 지갑 계정에 등록된 비밀번호가 없습니다. 첫 비밀번호를 등록해 주세요.</div>
+                {response ? (
+                    <div className="text-green-600 mt-2">첫 번째 비밀번호가 등록되었습니다.</div>
+                ) : (
+                    <form className="flex flex-row items-center gap-2" onSubmit={saveSecret}>
                         <input
-                            type="password"
-                            placeholder="Enter password"
-                            onChange={(e) => onPasswordChange(e, idx)}
-                        // onBlur={verifyPasswords}
+                            className="w-72 my-2 p-2 border border-gray-300 rounded"
+                            type={showPassword ? "text" : "password"}
+                            value={password}
+                            onChange={onPasswordChange}
+                            placeholder="첫 비밀번호 입력"
                         />
-                        {<p>{item.password}</p>}
-                        {console.log("item.password", item.password)}
-                        {console.log("hashing", hashing)}
-                        {console.log("password", password)}
-                        {console.log("passwords", passwords)}
-                        {/* {item.password === hashing ? <p>true</p> : <p>false</p>} */}
-                        {console.log("inputPasswords", inputPasswords)}
-                        {item.password === inputPasswords[idx] ? <p>true</p> : <p>false</p>}
-                    </div>
-                )
-            })}
-            {error && <p>{error}</p>}
-        </div>
-    )
+                        <button
+                            type="button"
+                            className="ml-1 px-2 py-1 border rounded bg-gray-100 hover:bg-gray-200"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            tabIndex={-1}
+                        >
+                            {showPassword ? '🙈' : '👁️'}
+                        </button>
+                        <button
+                            type="submit"
+                            className="w-48 my-2 p-2 bg-blue-400 border-none rounded cursor-pointer text-white"
+                        >
+                            첫 비밀번호 등록
+                        </button>
+                    </form>
+                )}
+                {error && <span className="text-red-500">{error}</span>}
+            </div>
+        );
+    }
+
+    // 기존 비밀번호가 있는 경우: 한 번에 하나의 입력창만 보이도록 리팩토링
+    if (passwords.length > 0) {
+        return (
+            <div className="flex flex-col justify-center items-center gap-4 mt-4">
+                {!isAllCorrect && (
+                    <form className="flex flex-col items-start gap-2" onSubmit={e => handlePasswordSubmit(currentStep, e)}>
+                        <label className="mb-1">{currentStep + 1}번째 비밀번호 확인:</label>
+                        <div className="flex flex-row items-center gap-2">
+                            <input
+                                type="password"
+                                placeholder="Enter password"
+                                value={inputValues[currentStep] || ''}
+                                onChange={e => handleInputChange(currentStep, e.target.value)}
+                                className="p-2 border border-gray-300 rounded"
+                            />
+                            <button
+                                type="submit"
+                                className="px-2 py-1 border rounded bg-blue-400 text-white hover:bg-blue-500"
+                            >
+                                제출
+                            </button>
+                        </div>
+                        {/* 메시지는 input 아래에 위치, 다음 버튼도 그 아래에 위치 */}
+                        {submitResults[currentStep] === '올바른 비밀번호입니다.' && (
+                            <>
+                                <span className="text-green-600 mt-1">올바른 비밀번호입니다.</span>
+                                <button
+                                    type="button"
+                                    className="mt-2 px-2 py-1 border rounded bg-green-500 text-white hover:bg-green-600"
+                                    onClick={handleNextStep}
+                                >
+                                    다음
+                                </button>
+                            </>
+                        )}
+                        {submitResults[currentStep] && submitResults[currentStep] !== '올바른 비밀번호입니다.' && (
+                            <span className="text-red-500 mt-1">올바른 비밀번호가 아닙니다.</span>
+                        )}
+                    </form>
+                )}
+                {isAllCorrect && (
+                    <div className="text-green-600 text-lg mt-2">모든 비번을 올바르게 입력하셨습니다</div>
+                )}
+            </div>
+        );
+    }
 }
