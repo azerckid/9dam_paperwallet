@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import Center from "./Center";
 import OldSecretNumber from "./OldSecretNumber";
 import NewSecretNumber from "./NewSecretNumber";
 import TitleDescription from "./TitleDescription";
@@ -59,7 +58,7 @@ export default function Verification() {
     };
 
     return (
-        <Center>
+        <>
             <TitleDescription />
             {/* QR 스캐너 ON/OFF 토글 버튼 */}
             <button
@@ -102,6 +101,6 @@ export default function Verification() {
                     )}
                 </>
             )}
-        </Center>
+        </>
     )
 }

@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Header from "@/components/Header";
 import Verification from "@/components/MainVerification";
+import Center from "@/components/Center";
 
 export default function Home() {
   return (
@@ -12,8 +13,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {/* Tailwind CSS 유틸리티 클래스를 각 컴포넌트에서 사용하세요. */}
-      <Header />
-      <Verification />
+      <Center>
+        <Header />
+        <Verification />
+      </Center>
     </>
   );
 }

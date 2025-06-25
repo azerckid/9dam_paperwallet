@@ -50,9 +50,14 @@ export default function Scanner({ getWalletAccount, getNewAccount }) {
     return (
         <>
             <h1>QR Code Scanner</h1>
-            <QrScanner
-                onDecode={(result) => { result && setData(result) }}
-            />
+            <div className="w-full flex justify-center">
+                <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/2">
+                    <QrScanner
+                        onDecode={(result) => { result && setData(result) }}
+                        className="w-full h-auto"
+                    />
+                </div>
+            </div>
             {validationMsg && (
                 <div className={validationMsg.includes('맞는') ? 'text-green-600 mt-2' : 'text-red-500 mt-2'}>
                     {validationMsg}
