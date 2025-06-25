@@ -3,9 +3,7 @@ import { supabase } from '@/libs/supabaseClient';
 export default async function handler(req, res) {
     try {
         // 요청에서 walletAccountId 추출
-        console.log(req.body)
         const { walletAccountId } = req.body;
-        console.log("walletAccountId", walletAccountId);
 
         // 유효성 검사
         if (!walletAccountId) {
@@ -25,7 +23,6 @@ export default async function handler(req, res) {
 
         // 결과 반환
         res.status(200).json(data);
-        console.log("passwords", data);
     } catch (error) {
         console.error('Error retrieving passwords:', error);
         res.status(500).json({ error: 'Internal server error' });

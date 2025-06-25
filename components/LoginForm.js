@@ -13,7 +13,7 @@ export default function Form() {
         reset({ username: "", password: "", email: "" });
     }
     const onInvalid = (errors) => {
-        console.log('invalid', errors)
+        // console.log('invalid', errors)
     }
 
     return (

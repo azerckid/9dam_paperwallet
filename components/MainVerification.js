@@ -25,14 +25,11 @@ export default function Verification() {
             setShowNewSecret(false);
             setNewSecretIndex(1);
         }
-        // console.log("walletAccount-from-QRscanner", data);
-        // console.log("walletAccount-from-QRscanner", typeof data)
     }
     const checkOldSecretNumberExists = (exists) => {
         setOldSecretNumberExists(exists);
     }
     const AllPasswordCorrect = (isCorrect, count) => {
-        console.log('AllPasswordCorrect 호출됨, 값:', isCorrect, 'count:', count);
         if (isCorrect) {
             setNewSecretIndex(count + 1); // 기존 비번 개수 + 1번째부터 시작
             setShowNewSecret(true);
@@ -40,11 +37,8 @@ export default function Verification() {
     };
     const getNewAccount = (data) => {
         setNewAccount(data);
-        // console.log("newAccount", data);
-        // console.log("newAccount", typeof data)
     }
     useEffect(() => {
-        console.log("showNewSecret 값:", showNewSecret);
     }, [showNewSecret]);
 
     // QR Scan ON/OFF 토글 핸들러: 상태 모두 초기화

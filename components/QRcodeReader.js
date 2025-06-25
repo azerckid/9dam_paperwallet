@@ -13,7 +13,6 @@ export default function Scanner({ getWalletAccount, getNewAccount }) {
         try {
             const response = await fetch('/api/wallet/getAllWalletAccounts');
             if (!response) {
-                console.log('response', response);
                 throw new Error('Network response was not ok');
             }
             const accounts = await response.json();
@@ -28,8 +27,6 @@ export default function Scanner({ getWalletAccount, getNewAccount }) {
                     body: JSON.stringify({ data })
                 });
                 getNewAccount(true);
-            } else {
-                console.log('The address already exists in the database.');
             }
         } catch (error) {
             console.error('Error fetching wallet accounts:', error);
@@ -55,7 +52,6 @@ export default function Scanner({ getWalletAccount, getNewAccount }) {
             <h1>QR Code Scanner</h1>
             <QrScanner
                 onDecode={(result) => { result && setData(result) }}
-                onError={(error) => console.log(error?.message)}
             />
             {validationMsg && (
                 <div className={validationMsg.includes('맞는') ? 'text-green-600 mt-2' : 'text-red-500 mt-2'}>
