@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-
 import OldSecretNumber from "./OldSecretNumber";
 import NewSecretNumber from "./NewSecretNumber";
 import TitleDescription from "./TitleDescription";
 import Scanner from "./QRcodeReader";
 import isValidBitcoinAddress from '../utils/CheckAddress';
+import { Button } from "@/components/ui/button";
 
 export default function Verification() {
     const [walletAccount, setWalletAccount] = useState('');
@@ -61,12 +61,13 @@ export default function Verification() {
         <>
             <TitleDescription />
             {/* QR 스캐너 ON/OFF 토글 버튼 */}
-            <button
-                className="my-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            <Button
+                className="my-4"
                 onClick={handleScannerToggle}
+                variant="default"
             >
                 {scannerOn ? 'QR Scan OFF' : 'QR Scan ON'}
-            </button>
+            </Button>
             {/* QR 스캐너가 ON일 때는 address 등 모든 정보 숨김 */}
             {scannerOn ? (
                 <div className="flex flex-col items-center">

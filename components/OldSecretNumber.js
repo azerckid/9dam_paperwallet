@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { sha256 } from "js-sha256";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function OldSecretNumber({ address, getAllPasswordCorrect, checkOldSecretNumberExists, AllPasswordCorrect }) {
     if (!address) return null;
@@ -158,27 +160,28 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
                     <div className="text-green-600 mt-2">첫 번째 비밀번호가 등록되었습니다.</div>
                 ) : (
                     <form className="flex flex-row items-center gap-2" onSubmit={saveSecret}>
-                        <input
-                            className="w-72 my-2 p-2 border border-gray-300 rounded"
+                        <Input
+                            className="w-72 my-2"
                             type={showPassword ? "text" : "password"}
                             value={password}
                             onChange={onPasswordChange}
                             placeholder="첫 비밀번호 입력"
                         />
-                        <button
+                        <Button
                             type="button"
-                            className="ml-1 px-2 py-1 border rounded bg-gray-100 hover:bg-gray-200"
+                            className="ml-1"
                             onClick={() => setShowPassword((prev) => !prev)}
                             tabIndex={-1}
+                            variant="outline"
                         >
                             {showPassword ? '🙈' : '👁️'}
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             type="submit"
-                            className="w-48 my-2 p-2 bg-blue-400 border-none rounded cursor-pointer text-white"
+                            className="w-48 my-2"
                         >
                             첫 비밀번호 등록
-                        </button>
+                        </Button>
                     </form>
                 )}
                 {error && <span className="text-red-500">{error}</span>}
@@ -194,31 +197,32 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
                     <form className="flex flex-col items-start gap-2" onSubmit={e => handlePasswordSubmit(currentStep, e)}>
                         <label className="mb-1">{currentStep + 1}번째 비밀번호 확인:</label>
                         <div className="flex flex-row items-center gap-2">
-                            <input
+                            <Input
                                 type="password"
                                 placeholder="Enter password"
                                 value={inputValues[currentStep] || ''}
                                 onChange={e => handleInputChange(currentStep, e.target.value)}
-                                className="p-2 border border-gray-300 rounded"
+                                className="w-72"
                             />
-                            <button
+                            <Button
                                 type="submit"
-                                className="px-2 py-1 border rounded bg-blue-400 text-white hover:bg-blue-500"
+                                className=""
                             >
                                 제출
-                            </button>
+                            </Button>
                         </div>
                         {/* 메시지는 input 아래에 위치, 다음 버튼도 그 아래에 위치 */}
                         {submitResults[currentStep] === '올바른 비밀번호입니다.' && (
                             <>
                                 <span className="text-green-600 mt-1">올바른 비밀번호입니다.</span>
-                                <button
+                                <Button
                                     type="button"
-                                    className="mt-2 px-2 py-1 border rounded bg-green-500 text-white hover:bg-green-600"
+                                    className="mt-2"
                                     onClick={handleNextStep}
+                                    variant="success"
                                 >
                                     다음
-                                </button>
+                                </Button>
                             </>
                         )}
                         {submitResults[currentStep] && submitResults[currentStep] !== '올바른 비밀번호입니다.' && (
