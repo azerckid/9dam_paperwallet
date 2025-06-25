@@ -2,8 +2,23 @@ import { useEffect, useState } from "react";
 import { sha256 } from "js-sha256";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Alert } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
+import { CheckCircle2Icon } from "lucide-react";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function OldSecretNumber({ address, getAllPasswordCorrect, checkOldSecretNumberExists, AllPasswordCorrect }) {
+    const { toast } = useToast();
     if (!address) return null;
     const [walletId, setWalletId] = useState(null);
     const [passwords, setPasswords] = useState([]);
@@ -14,6 +29,7 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
     const [showPassword, setShowPassword] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
     const [isAllCorrect, setIsAllCorrect] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
 
     const [password, setPassword] = useState("");
     const [hashing, setHashing] = useState("");
@@ -125,10 +141,16 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
             const newResults = [...submitResults];
             newResults[idx] = '올바른 비밀번호입니다.';
             setSubmitResults(newResults);
+            setOpenDialog(true);
         } else {
             const newResults = [...submitResults];
             newResults[idx] = '올바른 비번을 입력하세요.';
             setSubmitResults(newResults);
+            toast({
+                title: '오류',
+                description: '올바른 비밀번호가 아닙니다.',
+                variant: 'destructive',
+            });
         }
     };
 
@@ -213,20 +235,26 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
                         </div>
                         {/* 메시지는 input 아래에 위치, 다음 버튼도 그 아래에 위치 */}
                         {submitResults[currentStep] === '올바른 비밀번호입니다.' && (
-                            <>
-                                <span className="text-green-600 mt-1">올바른 비밀번호입니다.</span>
-                                <Button
-                                    type="button"
-                                    className="mt-2"
-                                    onClick={handleNextStep}
-                                    variant="success"
-                                >
-                                    다음
-                                </Button>
-                            </>
-                        )}
-                        {submitResults[currentStep] && submitResults[currentStep] !== '올바른 비밀번호입니다.' && (
-                            <span className="text-red-500 mt-1">올바른 비밀번호가 아닙니다.</span>
+                            <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle className="flex items-center gap-2">
+                                            <CheckCircle2Icon className="w-5 h-5 text-green-600" />
+                                            올바른 비밀번호입니다.
+                                        </AlertDialogTitle>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogAction
+                                            onClick={() => {
+                                                setOpenDialog(false);
+                                                handleNextStep();
+                                            }}
+                                        >
+                                            다음
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
                         )}
                     </form>
                 )}

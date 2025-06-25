@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { sha256 } from "js-sha256";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function NewSecretNumber({ address, onSuccess, index }) {
     if (!address) return null;
@@ -101,49 +104,51 @@ export default function NewSecretNumber({ address, onSuccess, index }) {
             ) : (
                 <form className="flex flex-col items-center gap-2" onSubmit={onSubmit}>
                     <div className="flex flex-row items-center gap-2">
-                        <input
-                            className="w-72 my-2 p-2 border border-gray-300 rounded"
+                        <Input
+                            className="w-72 my-2"
                             type={showPassword ? "text" : "password"}
                             value={password}
                             onChange={onPasswordChange}
                             placeholder="새 비밀번호 입력"
                         />
-                        <button
+                        <Button
                             type="button"
-                            className="ml-1 px-2 py-1 border rounded bg-gray-100 hover:bg-gray-200"
+                            className="ml-1"
                             onClick={() => setShowPassword((prev) => !prev)}
                             tabIndex={-1}
+                            variant="outline"
                         >
-                            {showPassword ? '🙈' : '👁️'}
-                        </button>
+                            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </Button>
                     </div>
                     <div className="flex flex-row items-center gap-2">
-                        <input
-                            className="w-72 my-2 p-2 border border-gray-300 rounded"
+                        <Input
+                            className="w-72 my-2"
                             type={showPasswordConfirm ? "text" : "password"}
                             value={passwordConfirm}
                             onChange={onPasswordConfirmChange}
                             placeholder="비밀번호 확인 입력"
                         />
-                        <button
+                        <Button
                             type="button"
-                            className="ml-1 px-2 py-1 border rounded bg-gray-100 hover:bg-gray-200"
+                            className="ml-1"
                             onClick={() => setShowPasswordConfirm((prev) => !prev)}
                             tabIndex={-1}
+                            variant="outline"
                         >
-                            {showPasswordConfirm ? '🙈' : '👁️'}
-                        </button>
+                            {showPasswordConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </Button>
                     </div>
                     {password && passwordConfirm && !isPasswordMatch && (
                         <span className="text-red-500">비밀번호가 일치하지 않습니다</span>
                     )}
-                    <button
+                    <Button
                         type="submit"
-                        className={`w-48 my-2 p-2 bg-blue-400 border-none rounded cursor-pointer text-white ${!isPasswordMatch ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`w-48 my-2 ${!isPasswordMatch ? 'opacity-50 cursor-not-allowed' : ''}`}
                         disabled={!isPasswordMatch}
                     >
                         새 비밀번호 등록
-                    </button>
+                    </Button>
                     {error && <span className="text-red-500">{error}</span>}
                 </form>
             )}
