@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import OldSecretNumber from "./OldSecretNumber";
-import NewSecretNumber from "./NewSecretNumber";
+import OldSecretNumber from "./Password/OldSecretNumber";
+import NewSecretNumber from "./Password/NewSecretNumber";
 import TitleDescription from "./TitleDescription";
-import Scanner from "./QRcodeReader";
+import Scanner from "./QRscan/QRcodeReader";
 import isValidBitcoinAddress from '../utils/CheckAddress';
 import { Button } from "@/components/ui/button";
 

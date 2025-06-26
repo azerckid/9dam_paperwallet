@@ -1,7 +1,7 @@
 import Head from "next/head";
-import Header from "@/components/Header";
+import Header from "@/components/Layout/Header";
 import Verification from "@/components/MainVerification";
-import Center from "@/components/Center";
+import Center from "@/components/Layout/Center";
 
 export default function Home() {
   return (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import isValidWalletAddress from '../utils/CheckAddress';
+import isValidWalletAddress from '../../utils/CheckAddress';
 
 // QrScanner를 클라이언트에서만 렌더링하도록 동적 import
 const QrScanner = dynamic(() => import('@yudiel/react-qr-scanner').then(mod => mod.QrScanner), { ssr: false });
