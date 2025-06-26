@@ -1,4 +1,4 @@
-import { supabase } from '@/libs/supabaseClient';
+import { supabase } from '@/lib/supabaseClient';
 
 export default async function findWalletIdByAddress(req, res) {
     try {
