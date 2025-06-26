@@ -2,19 +2,15 @@ import { useEffect, useState } from "react";
 import { sha256 } from "js-sha256";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Alert } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle2Icon } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,
-    AlertDialogCancel,
     AlertDialogContent,
-    AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
 export default function OldSecretNumber({ address, getAllPasswordCorrect, checkOldSecretNumberExists, AllPasswordCorrect }) {
@@ -30,20 +26,14 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
     const [currentStep, setCurrentStep] = useState(0);
     const [isAllCorrect, setIsAllCorrect] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
-
     const [password, setPassword] = useState("");
     const [hashing, setHashing] = useState("");
-    const [passwordValidationResults, setPasswordValidationResults] = useState([]);
 
     const onPasswordChange = (e) => {
         const newPassword = e.target.value;
         setPassword(newPassword);
         const hash = sha256(newPassword);
         setHashing(hash);
-    }
-
-    const arrayInputPasswords = (hashing) => {
-        setInputValues([...inputValues, hashing]);
     }
 
     const handleAllPasswordCorrect = () => {
@@ -54,25 +44,16 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
 
     const getWalletId = async () => {
         try {
-            if (!address) {
-                return;
-            }
+            if (!address) return;
             const response = await fetch('/api/wallet/findWalletIdByAddress', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ account: address }),
             });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
-            if (data) {
-                setWalletId(data);
-            } else {
-                setError('Wallet ID not found');
-            }
+            if (data) setWalletId(data);
+            else setError('Wallet ID not found');
         } catch (error) {
             setError('Error fetching wallet ID: ' + error.message);
         }
@@ -82,14 +63,10 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
         try {
             const response = await fetch('/api/password/getPasswords', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ walletAccountId: walletId }),
             });
-            if (!response.ok) {
-                throw new Error('Failed to fetch passwords');
-            }
+            if (!response.ok) throw new Error('Failed to fetch passwords');
             const data = await response.json();
             setPasswords(data);
         } catch (error) {
@@ -106,14 +83,10 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
             }
             const response = await fetch('/api/secrets/setSecret', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ password: hashing, walletAccountId: walletId }),
             });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             if (data) {
                 setResponse(data);
@@ -163,15 +136,8 @@ export default function OldSecretNumber({ address, getAllPasswordCorrect, checkO
         }
     };
 
-    useEffect(() => {
-        getWalletId();
-    }, [address]);
-
-    useEffect(() => {
-        if (walletId) {
-            getPasswords();
-        }
-    }, [walletId]);
+    useEffect(() => { getWalletId(); }, [address]);
+    useEffect(() => { if (walletId) getPasswords(); }, [walletId]);
 
     // 비밀번호가 없는 주소(최초 등록)일 때 UI
     if (passwords.length === 0) {

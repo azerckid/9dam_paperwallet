@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import OldSecretNumber from "./Password/OldSecretNumber";
-import NewSecretNumber from "./Password/NewSecretNumber";
+import { useState } from "react";
+import PasswordFirstRegister from "./Password/PasswordFirstRegister";
+import PasswordVerify from "./Password/PasswordVerify";
+import PasswordAdd from "./Password/PasswordAdd";
 import TitleDescription from "./TitleDescription";
 import Scanner from "./QRscan/QRcodeReader";
 import isValidBitcoinAddress from '../utils/CheckAddress';
@@ -8,50 +9,67 @@ import { Button } from "@/components/ui/button";
 
 export default function Verification() {
     const [walletAccount, setWalletAccount] = useState('');
-    const [oldSecretNumberExists, setOldSecretNumberExists] = useState(false); // null로 초기화하여 아직 확인되지 않음을 나타냅니다.
-    const [handleAllPassword, setHandleAllPassword] = useState(false);
-    const [newAccount, setNewAccount] = useState(false);
-    const [scannerOn, setScannerOn] = useState(false); // QR 스캐너 ON/OFF 상태
-    // 추가: 새 비번 생성 UI 표시 여부와 몇번째 비번 생성인지
-    const [showNewSecret, setShowNewSecret] = useState(false);
-    const [passwordCount, setPasswordCount] = useState(0);
+    const [passwordCount, setPasswordCount] = useState(0); // 등록된 비밀번호 개수
+    const [scannerOn, setScannerOn] = useState(false);
+    const [step, setStep] = useState(''); // '', 'first', 'verify', 'add'
 
-    const getWalletAccount = (data) => {
-        setWalletAccount(data);
-        // 형식이 맞는 주소일 때만 카메라 OFF 및 다음 단계 진행
-        if (data && isValidBitcoinAddress(data)) {
-            setScannerOn(false); // 스캔 성공 시 카메라 OFF
-            setShowNewSecret(false);
-            setPasswordCount(0);
-        }
-    }
-    const checkOldSecretNumberExists = (exists) => {
-        setOldSecretNumberExists(exists);
-    }
-    const AllPasswordCorrect = (isCorrect, count) => {
-        if (isCorrect) {
-            setPasswordCount(count);
-            setShowNewSecret(true);
+    // address로 등록된 비밀번호 개수 fetch
+    const fetchPasswordCount = async (address) => {
+        if (!address) return 0;
+        try {
+            const response = await fetch('/api/wallet/findWalletIdByAddress', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ account: address }),
+            });
+            if (!response.ok) throw new Error('Network response was not ok');
+            const walletId = await response.json();
+            if (!walletId) return 0;
+            const pwRes = await fetch('/api/password/getPasswords', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ walletAccountId: walletId }),
+            });
+            if (!pwRes.ok) throw new Error('Failed to fetch passwords');
+            const pwData = await pwRes.json();
+            return Array.isArray(pwData) ? pwData.length : 0;
+        } catch {
+            return 0;
         }
     };
-    const getNewAccount = (data) => {
-        setNewAccount(data);
-    }
-    useEffect(() => {
-    }, [showNewSecret]);
+
+    const getWalletAccount = async (data) => {
+        setWalletAccount(data);
+        if (data && isValidBitcoinAddress(data)) {
+            setScannerOn(false);
+            // address로 등록된 비밀번호 개수 확인 후 step 결정
+            const count = await fetchPasswordCount(data);
+            setPasswordCount(count);
+            if (count === 0) setStep('first');
+            else setStep('verify');
+        }
+    };
+
+    const handleAllPasswordCorrect = (count) => {
+        setPasswordCount(count);
+        setStep('add');
+    };
+
+    const handleAddSuccess = async () => {
+        // 비밀번호 추가 후 다시 검증 단계로 돌아가거나, 원하는 UX에 맞게 처리
+        const count = await fetchPasswordCount(walletAccount);
+        setPasswordCount(count);
+        setStep('verify');
+    };
 
     // QR Scan ON/OFF 토글 핸들러: 상태 모두 초기화
     const handleScannerToggle = () => {
         setScannerOn((prev) => {
             const next = !prev;
             if (next) {
-                // QR Scan ON: 모든 상태 초기화
                 setWalletAccount('');
-                setShowNewSecret(false);
                 setPasswordCount(0);
-                setOldSecretNumberExists(false);
-                setHandleAllPassword(false);
-                setNewAccount(false);
+                setStep('');
             }
             return next;
         });
@@ -60,48 +78,32 @@ export default function Verification() {
     return (
         <>
             <TitleDescription />
-            {/* QR 스캐너 ON/OFF 토글 버튼 */}
-            <Button
-                className="my-4"
-                onClick={handleScannerToggle}
-                variant="default"
-            >
+            <Button className="my-4" onClick={handleScannerToggle} variant="default">
                 {scannerOn ? 'QR Scan OFF' : 'QR Scan ON'}
             </Button>
-            {/* QR 스캐너가 ON일 때는 address 등 모든 정보 숨김 */}
             {scannerOn ? (
                 <div className="flex flex-col items-center">
                     <div className="mb-4 text-lg font-semibold">지갑 QR CODE를 스캔해주세요</div>
-                    <Scanner
-                        getWalletAccount={getWalletAccount}
-                        getNewAccount={getNewAccount}
-                    />
+                    <Scanner getWalletAccount={getWalletAccount} />
                 </div>
             ) : (
                 <>
-                    {/* 스캔된 주소가 있으면 버튼 아래에 표시 */}
                     {walletAccount && (
                         <div className="my-2 text-base font-semibold">address : {walletAccount}</div>
                     )}
-                    {/* address, 안내문구, OldSecretNumber 등 기존 UI */}
-                    {!showNewSecret && (
-                        <OldSecretNumber
-                            address={walletAccount}
-                            checkOldSecretNumberExists={checkOldSecretNumberExists}
-                            AllPasswordCorrect={AllPasswordCorrect}
-                        />
+                    {step === 'first' && (
+                        <PasswordFirstRegister address={walletAccount} onSuccess={handleAddSuccess} />
                     )}
-                    {showNewSecret && (
+                    {step === 'verify' && (
+                        <PasswordVerify address={walletAccount} onAllCorrect={handleAllPasswordCorrect} />
+                    )}
+                    {step === 'add' && (
                         <div className="flex flex-col items-center mt-8">
-                            <NewSecretNumber
-                                address={walletAccount}
-                                onSuccess={() => setPasswordCount(prev => prev + 1)}
-                                index={passwordCount}
-                            />
+                            <PasswordAdd address={walletAccount} onSuccess={handleAddSuccess} index={passwordCount} />
                         </div>
                     )}
                 </>
             )}
         </>
-    )
+    );
 }
