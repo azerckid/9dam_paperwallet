@@ -84,6 +84,7 @@ export default function PasswordVerify({ address, onAllCorrect }) {
                 variant: "destructive",
                 title: "비밀번호가 일치하지 않습니다.",
                 description: "입력하신 비밀번호를 다시 확인해 주세요.",
+                duration: 2000, // 3초 동안만 표시
             });
         }
     };
