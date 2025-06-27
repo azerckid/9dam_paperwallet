@@ -11,6 +11,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export default function PasswordVerify({ address, onAllCorrect }) {
     if (!address) return null;
@@ -22,6 +23,7 @@ export default function PasswordVerify({ address, onAllCorrect }) {
     const [currentStep, setCurrentStep] = useState(0);
     const [isAllCorrect, setIsAllCorrect] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
+    const { toast } = useToast();
 
     const getWalletId = async () => {
         try {
@@ -78,6 +80,11 @@ export default function PasswordVerify({ address, onAllCorrect }) {
             const newResults = [...submitResults];
             newResults[idx] = '올바른 비번을 입력하세요.';
             setSubmitResults(newResults);
+            toast({
+                variant: "destructive",
+                title: "비밀번호가 일치하지 않습니다.",
+                description: "입력하신 비밀번호를 다시 확인해 주세요.",
+            });
         }
     };
 
