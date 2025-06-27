@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import isValidWalletAddress from '../../utils/CheckAddress';
 
@@ -9,7 +9,7 @@ export default function Scanner({ getWalletAccount, getNewAccount }) {
     const [data, setData] = useState('');
     const [validationMsg, setValidationMsg] = useState('');
 
-    const checkAddressInDB = async () => {
+    const checkAddressInDB = useCallback(async () => {
         try {
             const response = await fetch('/api/wallet/getAllWalletAccounts');
             if (!response) {
@@ -31,13 +31,18 @@ export default function Scanner({ getWalletAccount, getNewAccount }) {
         } catch (error) {
             console.error('Error fetching wallet accounts:', error);
         }
-    }
+    }, [data, getNewAccount]);
+
+    const handleWalletAccount = useCallback((walletData) => {
+        getWalletAccount(walletData);
+    }, [getWalletAccount]);
+
     useEffect(() => {
         if (data) {
             if (isValidWalletAddress(data)) {
                 setValidationMsg('형식에 맞는 주소입니다.');
                 checkAddressInDB();
-                getWalletAccount(data);
+                handleWalletAccount(data);
             } else {
                 setValidationMsg('형식에 맞지 않는 주소입니다.');
                 // 주소가 올바르지 않으면 DB 저장/진행 안 함
@@ -45,7 +50,7 @@ export default function Scanner({ getWalletAccount, getNewAccount }) {
         } else {
             setValidationMsg('');
         }
-    }, [data]);
+    }, [data, checkAddressInDB, handleWalletAccount]);
 
     return (
         <>

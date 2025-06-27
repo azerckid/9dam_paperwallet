@@ -7,7 +7,6 @@ import { Eye, EyeOff } from "lucide-react";
 // 새 비밀번호 추가 등록 컴포넌트
 // props: address (지갑 주소), onSuccess (등록 성공 시 콜백), index (비밀번호 인덱스)
 export default function PasswordAdd({ address, onSuccess, index }) {
-    if (!address) return null;
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [hashing, setHashing] = useState("");
@@ -16,6 +15,28 @@ export default function PasswordAdd({ address, onSuccess, index }) {
     const [response, setResponse] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+
+    useEffect(() => {
+        if (!address) return;
+        const getWalletId = async () => {
+            try {
+                const response = await fetch('/api/wallet/findWalletIdByAddress', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ account: address }),
+                });
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                if (data) setWalletId(data);
+                else setError('Wallet ID not found');
+            } catch (error) {
+                setError(error.message);
+            }
+        };
+        getWalletId();
+    }, [address]);
+
+    if (!address) return null;
 
     const onPasswordChange = (e) => {
         const newPassword = e.target.value;
@@ -26,25 +47,6 @@ export default function PasswordAdd({ address, onSuccess, index }) {
     const onPasswordConfirmChange = (e) => {
         setPasswordConfirm(e.target.value);
     }
-
-    const getWalletId = async () => {
-        try {
-            if (!address) return;
-            const response = await fetch('/api/wallet/findWalletIdByAddress', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ account: address }),
-            });
-            if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
-            if (data) setWalletId(data);
-            else setError('Wallet ID not found');
-        } catch (error) {
-            setError(error.message);
-        }
-    }
-
-    useEffect(() => { getWalletId(); }, [address]);
 
     const saveSecret = async (e) => {
         e.preventDefault();

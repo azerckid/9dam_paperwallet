@@ -14,7 +14,6 @@ import {
 import { useToast } from "@/hooks/use-toast";
 
 export default function PasswordVerify({ address, onAllCorrect }) {
-    if (!address) return null;
     const [walletId, setWalletId] = useState(null);
     const [passwords, setPasswords] = useState([]);
     const [inputValues, setInputValues] = useState([]);
@@ -25,40 +24,44 @@ export default function PasswordVerify({ address, onAllCorrect }) {
     const [openDialog, setOpenDialog] = useState(false);
     const { toast } = useToast();
 
-    const getWalletId = async () => {
-        try {
-            if (!address) return;
-            const response = await fetch('/api/wallet/findWalletIdByAddress', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ account: address }),
-            });
-            if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
-            if (data) setWalletId(data);
-            else setError('Wallet ID not found');
-        } catch (error) {
-            setError('Error fetching wallet ID: ' + error.message);
-        }
-    };
-
-    const getPasswords = async () => {
-        try {
-            const response = await fetch('/api/password/getPasswords', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ walletAccountId: walletId }),
-            });
-            if (!response.ok) throw new Error('Failed to fetch passwords');
-            const data = await response.json();
-            setPasswords(data);
-        } catch (error) {
-            setError('Error fetching passwords: ' + error.message);
-        }
-    };
-
-    useEffect(() => { getWalletId(); }, [address]);
-    useEffect(() => { if (walletId) getPasswords(); }, [walletId]);
+    useEffect(() => {
+        if (!address) return;
+        const getWalletId = async () => {
+            try {
+                const response = await fetch('/api/wallet/findWalletIdByAddress', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ account: address }),
+                });
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                if (data) setWalletId(data);
+                else setError('Wallet ID not found');
+            } catch (error) {
+                setError('Error fetching wallet ID: ' + error.message);
+            }
+        };
+        getWalletId();
+    }, [address]);
+    useEffect(() => {
+        if (!walletId) return;
+        const getPasswords = async () => {
+            try {
+                const response = await fetch('/api/password/getPasswords', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ walletAccountId: walletId }),
+                });
+                if (!response.ok) throw new Error('Failed to fetch passwords');
+                const data = await response.json();
+                setPasswords(data);
+            } catch (error) {
+                setError('Error fetching passwords: ' + error.message);
+            }
+        };
+        getPasswords();
+    }, [walletId]);
+    if (!address) return null;
 
     const handleInputChange = (idx, value) => {
         const newValues = [...inputValues];
