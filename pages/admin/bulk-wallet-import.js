@@ -36,8 +36,8 @@ export default function BulkWalletImport() {
 
     if (!authed) {
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <Card className="w-full max-w-sm">
+            <div className="flex justify-center items-center min-h-screen px-2">
+                <Card className="w-full max-w-xs p-2">
                     <CardHeader>
                         <CardTitle>관리자 업로드 인증</CardTitle>
                     </CardHeader>
@@ -47,9 +47,9 @@ export default function BulkWalletImport() {
                             value={pw}
                             onChange={e => setPw(e.target.value)}
                             placeholder="비밀번호"
-                            className="mb-4"
+                            className="mb-4 py-3 text-base"
                         />
-                        <Button className="w-full" onClick={handleAuth}>
+                        <Button className="w-full py-3 text-base" onClick={handleAuth}>
                             확인
                         </Button>
                     </CardContent>
@@ -59,19 +59,19 @@ export default function BulkWalletImport() {
     }
 
     return (
-        <div className="flex justify-center items-center min-h-screen">
-            <Card className="w-full max-w-lg">
+        <div className="flex justify-center items-center min-h-screen px-2">
+            <Card className="w-full max-w-xs p-2">
                 <CardHeader>
                     <CardTitle>지갑 주소 대량 업로드 (CSV)</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex flex-col gap-4">
-                        <Input type="file" accept=".csv" onChange={handleFileChange} />
-                        <Button onClick={handleUpload} disabled={!file}>
+                    <div className="flex flex-col gap-3">
+                        <Input type="file" accept=".csv" onChange={handleFileChange} className="py-3 text-base" />
+                        <Button onClick={handleUpload} disabled={!file} className="w-full py-3 text-base">
                             업로드
                         </Button>
                         {result && (
-                            <pre className="bg-muted p-4 rounded text-xs overflow-x-auto mt-4">
+                            <pre className="bg-muted p-2 rounded text-xs overflow-x-auto mt-4">
                                 {JSON.stringify(result, null, 2)}
                             </pre>
                         )}

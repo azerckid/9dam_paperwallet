@@ -36,16 +36,16 @@ export default function WalletList() {
     if (loading) return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
 
     return (
-        <div className="flex flex-col gap-8 max-w-4xl mx-auto py-12">
+        <div className="flex flex-col gap-8 max-w-4xl mx-auto py-12 px-2">
             <div className="flex justify-end mb-4">
-                <Button asChild variant="secondary">
+                <Button asChild variant="secondary" className="py-2 px-3 text-sm">
                     <Link href="/admin/stats">통계 대시보드로 이동</Link>
                 </Button>
             </div>
-            <Card>
+            <Card className="p-3">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>등록된 지갑 주소 목록</CardTitle>
-                    <Button onClick={handleExportCSV} variant="outline">
+                    <Button onClick={handleExportCSV} variant="outline" className="py-2 px-3 text-sm">
                         CSV로 내보내기
                     </Button>
                 </CardHeader>
@@ -54,17 +54,17 @@ export default function WalletList() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>ID</TableHead>
-                                    <TableHead>지갑 주소</TableHead>
-                                    <TableHead>등록일</TableHead>
+                                    <TableHead className="text-xs p-1">ID</TableHead>
+                                    <TableHead className="text-xs p-1">지갑 주소</TableHead>
+                                    <TableHead className="text-xs p-1">등록일</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {wallets.map(w => (
                                     <TableRow key={w.id}>
-                                        <TableCell>{w.id}</TableCell>
-                                        <TableCell className="font-mono text-xs">{w.account}</TableCell>
-                                        <TableCell>{w.created_at ? new Date(w.created_at).toLocaleString() : "-"}</TableCell>
+                                        <TableCell className="text-xs p-1">{w.id}</TableCell>
+                                        <TableCell className="font-mono text-xs p-1">{w.account}</TableCell>
+                                        <TableCell className="text-xs p-1">{w.created_at ? new Date(w.created_at).toLocaleString() : "-"}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
