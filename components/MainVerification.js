@@ -51,7 +51,7 @@ export default function Verification() {
         }
         setIsLoadingBalance(true);
         setBalanceError('');
-        fetch(`https://blockchain.mobick.info/api/address/${walletAccount}`)
+        fetch(`/api/proxy-balance?address=${encodeURIComponent(walletAccount.trim())}`)
             .then(res => {
                 if (!res.ok) throw new Error('잔액 조회 실패');
                 return res.json();
