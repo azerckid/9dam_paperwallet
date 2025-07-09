@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PasswordFirstRegister from "./Password/PasswordFirstRegister";
 import PasswordVerify from "./Password/PasswordVerify";
 import PasswordAdd from "./Password/PasswordAdd";
@@ -12,6 +12,10 @@ export default function Verification() {
     const [passwordCount, setPasswordCount] = useState(0); // 등록된 비밀번호 개수
     const [scannerOn, setScannerOn] = useState(false);
     const [step, setStep] = useState(''); // '', 'first', 'verify', 'add'
+    // 잔액 관련 상태 추가
+    const [balance, setBalance] = useState(null);
+    const [isLoadingBalance, setIsLoadingBalance] = useState(false);
+    const [balanceError, setBalanceError] = useState('');
 
     // address로 등록된 비밀번호 개수 fetch
     const fetchPasswordCount = async (address) => {
@@ -37,6 +41,35 @@ export default function Verification() {
             return 0;
         }
     };
+
+    // 주소가 바뀔 때마다 잔액 조회
+    useEffect(() => {
+        if (!walletAccount) {
+            setBalance(null);
+            setBalanceError('');
+            return;
+        }
+        setIsLoadingBalance(true);
+        setBalanceError('');
+        fetch(`https://blockchain.mobick.info/api/address/${walletAccount}`)
+            .then(res => {
+                if (!res.ok) throw new Error('잔액 조회 실패');
+                return res.json();
+            })
+            .then(json => {
+                if (json && typeof json.txHistory?.balanceSat === 'number') {
+                    setBalance(json.txHistory.balanceSat);
+                } else {
+                    setBalance(null);
+                    setBalanceError('잔액 정보 없음');
+                }
+            })
+            .catch(() => {
+                setBalance(null);
+                setBalanceError('잔액 조회 실패');
+            })
+            .finally(() => setIsLoadingBalance(false));
+    }, [walletAccount]);
 
     const getWalletAccount = async (data) => {
         setWalletAccount(data);
@@ -89,7 +122,18 @@ export default function Verification() {
             ) : (
                 <>
                     {walletAccount && (
-                        <div className="my-2 text-base font-semibold">address : {walletAccount}</div>
+                        <div className="my-2 text-base font-semibold">
+                            address : {walletAccount}
+                            <div className="mt-1 text-sm font-normal">
+                                {isLoadingBalance && <span>잔액 조회 중...</span>}
+                                {!isLoadingBalance && balance !== null && (
+                                    <span>잔액: {balance} Satoshi ({(balance / 1e8).toFixed(8)} BTC)</span>
+                                )}
+                                {!isLoadingBalance && balanceError && (
+                                    <span className="text-red-500">{balanceError}</span>
+                                )}
+                            </div>
+                        </div>
                     )}
                     {step === 'first' && (
                         <PasswordFirstRegister address={walletAccount} onSuccess={handleAddSuccess} />

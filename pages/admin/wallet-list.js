@@ -7,6 +7,8 @@ import Link from "next/link";
 export default function WalletList() {
     const [wallets, setWallets] = useState([]);
     const [loading, setLoading] = useState(true);
+    // 잔액 상태: { [address]: { value, loading, error } }
+    const [balances, setBalances] = useState({});
 
     useEffect(() => {
         fetch("/api/wallet/getAllWalletAccounts")
@@ -17,7 +19,34 @@ export default function WalletList() {
             });
     }, []);
 
-    // CSV Export 기능
+    // 주소별 잔액 fetch
+    useEffect(() => {
+        if (!wallets.length) return;
+        wallets.forEach(w => {
+            if (!w.account) return;
+            console.log("[wallet-list] 지갑 주소 원본:", w.account, "| 길이:", w.account.length, "| 인코딩:", encodeURIComponent(w.account));
+            // 이미 조회했으면 skip
+            if (balances[w.account]) return;
+            setBalances(prev => ({ ...prev, [w.account]: { value: null, loading: true, error: null } }));
+            fetch(`/api/proxy-balance?address=${encodeURIComponent(w.account.trim())}`)
+                .then(res => {
+                    console.log("[wallet-list] API 응답 status:", res.status, "주소:", w.account.trim());
+                    if (!res.ok) throw new Error('잔액 조회 실패');
+                    return res.json();
+                })
+                .then(json => {
+                    console.log("[wallet-list] API 응답 데이터:", json);
+                    const sat = json?.txHistory?.balanceSat;
+                    const btc = typeof sat === 'number' ? (sat / 1e8) : null;
+                    setBalances(prev => ({ ...prev, [w.account]: { value: btc, loading: false, error: null } }));
+                })
+                .catch(() => {
+                    setBalances(prev => ({ ...prev, [w.account]: { value: null, loading: false, error: '잔액 조회 실패' } }));
+                });
+        });
+    }, [wallets]);
+
+    // CSV Export 기능 (잔액은 미포함)
     const handleExportCSV = () => {
         if (!wallets.length) return;
         const header = "id,account,created_at";
@@ -57,6 +86,7 @@ export default function WalletList() {
                                     <TableHead className="text-xs p-1">ID</TableHead>
                                     <TableHead className="text-xs p-1">지갑 주소</TableHead>
                                     <TableHead className="text-xs p-1">등록일</TableHead>
+                                    <TableHead className="text-xs p-1">잔액(BTC)</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -65,6 +95,16 @@ export default function WalletList() {
                                         <TableCell className="text-xs p-1">{w.id}</TableCell>
                                         <TableCell className="font-mono text-xs p-1">{w.account}</TableCell>
                                         <TableCell className="text-xs p-1">{w.created_at ? new Date(w.created_at).toLocaleString() : "-"}</TableCell>
+                                        <TableCell className="text-xs p-1">
+                                            {balances[w.account] && balances[w.account].loading && <span>조회 중...</span>}
+                                            {balances[w.account] && !balances[w.account].loading && balances[w.account].value !== null && (
+                                                <span>{balances[w.account].value.toFixed(8)}</span>
+                                            )}
+                                            {balances[w.account] && !balances[w.account].loading && balances[w.account].error && (
+                                                <span className="text-red-500">{balances[w.account].error}</span>
+                                            )}
+                                            {!balances[w.account] && <span>-</span>}
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

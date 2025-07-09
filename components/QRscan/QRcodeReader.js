@@ -8,6 +8,10 @@ const QrScanner = dynamic(() => import('@yudiel/react-qr-scanner').then(mod => m
 export default function Scanner({ getWalletAccount, getNewAccount }) {
     const [data, setData] = useState('');
     const [validationMsg, setValidationMsg] = useState('');
+    // 잔액 관련 상태 추가
+    const [balance, setBalance] = useState(null);
+    const [isLoadingBalance, setIsLoadingBalance] = useState(false);
+    const [balanceError, setBalanceError] = useState('');
 
     const checkAddressInDB = useCallback(async () => {
         try {
@@ -43,12 +47,37 @@ export default function Scanner({ getWalletAccount, getNewAccount }) {
                 setValidationMsg('형식에 맞는 주소입니다.');
                 checkAddressInDB();
                 handleWalletAccount(data);
+                // 잔액 조회 (프록시 API 사용)
+                setIsLoadingBalance(true);
+                setBalanceError('');
+                fetch(`/api/proxy-balance?address=${encodeURIComponent(data.trim())}`)
+                    .then(res => {
+                        if (!res.ok) throw new Error('잔액 조회 실패');
+                        return res.json();
+                    })
+                    .then(json => {
+                        if (json && typeof json.txHistory?.balanceSat === 'number') {
+                            setBalance(json.txHistory.balanceSat);
+                        } else {
+                            setBalance(null);
+                            setBalanceError('잔액 정보 없음');
+                        }
+                    })
+                    .catch(() => {
+                        setBalance(null);
+                        setBalanceError('잔액 조회 실패');
+                    })
+                    .finally(() => setIsLoadingBalance(false));
             } else {
                 setValidationMsg('형식에 맞지 않는 주소입니다.');
+                setBalance(null);
+                setBalanceError('');
                 // 주소가 올바르지 않으면 DB 저장/진행 안 함
             }
         } else {
             setValidationMsg('');
+            setBalance(null);
+            setBalanceError('');
         }
     }, [data, checkAddressInDB, handleWalletAccount]);
 
@@ -66,6 +95,18 @@ export default function Scanner({ getWalletAccount, getNewAccount }) {
             {validationMsg && (
                 <div className={validationMsg.includes('맞는') ? 'text-green-600 mt-2' : 'text-red-500 mt-2'}>
                     {validationMsg}
+                </div>
+            )}
+            {/* 잔액 표시 */}
+            {isValidWalletAddress(data) && (
+                <div className="mt-2 text-sm">
+                    {isLoadingBalance && <span>잔액 조회 중...</span>}
+                    {!isLoadingBalance && balance !== null && (
+                        <span>잔액: {balance} Satoshi ({(balance / 1e8).toFixed(8)} BTC)</span>
+                    )}
+                    {!isLoadingBalance && balanceError && (
+                        <span className="text-red-500">{balanceError}</span>
+                    )}
                 </div>
             )}
             {/* address는 MainVerification에서만 필요할 때 보여주도록, 여기서는 숨김 */}
