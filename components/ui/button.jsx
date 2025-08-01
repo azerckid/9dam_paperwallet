@@ -10,9 +10,14 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-white text-[#05B6A2] shadow hover:bg-white/90",
+        defaultOrange: "text-white bg-[#F59E0B] shadow hover:bg-[#F59E0B]/90",
         defaultGreen: "text-white bg-[#05B6A2] shadow hover:bg-[#05B6A2]/90",
         defaultGray: "text-white bg-[#9CA3AF] shadow hover:bg-[#9CA3AF]/90",
         destructive: "bg-[#FF7676] text-white shadow-sm hover:bg-[#FF7676]/90",
+        destructiveInvert:
+          "bg-white border border-[#FECACA] text-[#DC2626] hover:bg-white/90",
+        warning:
+          "bg-white border border-[#FDE68A] text-[#92400E] hover:bg-white/90",
         outline:
           "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary:
@@ -23,8 +28,8 @@ const buttonVariants = cva(
       size: {
         default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
-        xl: "h-14 rounded-xl px-8 text-md font-bold",
+        lg: "h-12 rounded-lg px-8 text-base",
+        xl: "h-14 rounded-xl px-8 text-base font-bold",
         icon: "h-9 w-9",
       },
     },

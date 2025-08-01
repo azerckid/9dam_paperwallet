@@ -6,7 +6,7 @@ const Footer = () => {
   const menuItems = [
     { href: "/", label: "문의하기", icon: <Mail /> },
     { href: "/", label: "오픈채팅", icon: <MessageCircle /> },
-    { href: "/", label: "가이드 영상", icon: <PlaySquare /> },
+    { href: "/", label: "가이드 영상", icon: <Play /> },
   ];
 
   return (

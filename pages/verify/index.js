@@ -1,6 +1,6 @@
-import Center from "@/components/Layout/Center";
 import Header from "@/components/Layout/Header";
-import Verification from "@/components/MainVerification";
+import Center from "@/components/Layout/Center";
+import Verification from "@/components/Verification";
 
 const VerifyPage = () => {
   return (
