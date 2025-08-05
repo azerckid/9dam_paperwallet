@@ -9,7 +9,7 @@ import RegisterSuccess from "@/components/verify/register/RegisterSuccess";
 
 const RegisterPwdPage = () => {
   const router = useRouter();
-  const { address } = router.query;
+  const { address, verified } = router.query;
   const { fetchWalletInfo, isVerified } = useWallet();
   const [onSuccess, setOnSuccess] = useState(false);
 
@@ -23,7 +23,8 @@ const RegisterPwdPage = () => {
         console.log("isVerified: ", isVerified);
 
         if (info) {
-          if (info.passwordCount > 0 && !isVerified) {
+          const isVerifiedFromURL = verified === "true";
+          if (info.passwordCount > 0 && !isVerified && !isVerifiedFromURL) {
             router.push(`/verify/check/${address}`);
             return;
           }

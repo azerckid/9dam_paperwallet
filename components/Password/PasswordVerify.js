@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { sha256 } from "js-sha256";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2Icon } from "lucide-react";
@@ -13,55 +12,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 
-export default function PasswordVerify({ address, onAllCorrect }) {
-    const [walletId, setWalletId] = useState(null);
-    const [passwords, setPasswords] = useState([]);
+export default function PasswordVerify({ walletId, passwordCount, onAllCorrect }) {
     const [inputValues, setInputValues] = useState([]);
-    const [submitResults, setSubmitResults] = useState([]);
-    const [error, setError] = useState('');
     const [currentStep, setCurrentStep] = useState(0);
     const [isAllCorrect, setIsAllCorrect] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
     const { toast } = useToast();
-
-    useEffect(() => {
-        if (!address) return;
-        const getWalletId = async () => {
-            try {
-                const response = await fetch('/api/wallet/findWalletIdByAddress', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ account: address }),
-                });
-                if (!response.ok) throw new Error('Network response was not ok');
-                const data = await response.json();
-                if (data) setWalletId(data);
-                else setError('Wallet ID not found');
-            } catch (error) {
-                setError('Error fetching wallet ID: ' + error.message);
-            }
-        };
-        getWalletId();
-    }, [address]);
-    useEffect(() => {
-        if (!walletId) return;
-        const getPasswords = async () => {
-            try {
-                const response = await fetch('/api/password/getPasswords', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ walletAccountId: walletId }),
-                });
-                if (!response.ok) throw new Error('Failed to fetch passwords');
-                const data = await response.json();
-                setPasswords(data);
-            } catch (error) {
-                setError('Error fetching passwords: ' + error.message);
-            }
-        };
-        getPasswords();
-    }, [walletId]);
-    if (!address) return null;
 
     const handleInputChange = (idx, value) => {
         const newValues = [...inputValues];
@@ -69,45 +25,71 @@ export default function PasswordVerify({ address, onAllCorrect }) {
         setInputValues(newValues);
     };
 
-    const handlePasswordSubmit = (idx, e) => {
+    const handlePasswordSubmit = async (e) => {
         e.preventDefault();
-        const input = inputValues[idx] || '';
-        const hashedInput = sha256(input);
-        const hashed = passwords[idx].password;
-        if (hashedInput === hashed) {
-            const newResults = [...submitResults];
-            newResults[idx] = '올바른 비밀번호입니다.';
-            setSubmitResults(newResults);
-            setOpenDialog(true);
-        } else {
-            const newResults = [...submitResults];
-            newResults[idx] = '올바른 비번을 입력하세요.';
-            setSubmitResults(newResults);
+        const passwordInput = inputValues[currentStep] || '';
+
+        if (!passwordInput) {
             toast({
                 variant: "destructive",
-                title: "비밀번호가 일치하지 않습니다.",
-                description: "입력하신 비밀번호를 다시 확인해 주세요.",
-                duration: 2000, // 3초 동안만 표시
+                title: "비밀번호를 입력해주세요.",
+                description: "",
+                duration: 2000,
+            });
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/password/verifyPassword', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ walletAccountId: walletId, passwordIndex: currentStep, passwordInput }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setOpenDialog(true);
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "비밀번호가 일치하지 않습니다.",
+                    description: data.message || "입력하신 비밀번호를 다시 확인해 주세요.",
+                    duration: 2000,
+                });
+            }
+        } catch (error) {
+            console.error("비밀번호 검증 실패:", error);
+            toast({
+                variant: "destructive",
+                title: "오류 발생",
+                description: "비밀번호 검증 중 오류가 발생했습니다.",
+                duration: 2000,
             });
         }
     };
 
     const handleNextStep = () => {
-        if (currentStep < passwords.length - 1) {
+        if (currentStep < passwordCount - 1) {
             setCurrentStep(currentStep + 1);
+            setInputValues(prev => { // Clear current input after successful verification
+                const newValues = [...prev];
+                newValues[currentStep] = '';
+                return newValues;
+            });
         } else {
             setIsAllCorrect(true);
-            if (typeof onAllCorrect === 'function') onAllCorrect(passwords.length);
+            if (typeof onAllCorrect === 'function') onAllCorrect(passwordCount);
         }
     };
 
-    if (passwords.length === 0) return null;
+    if (passwordCount === 0) return null;
 
     return (
         <div className="flex flex-col justify-center items-center gap-4 mt-4">
             {!isAllCorrect && (
-                <form className="flex flex-col items-start gap-2" onSubmit={e => handlePasswordSubmit(currentStep, e)}>
-                    <label className="mb-1">{currentStep + 1}번째 비밀번호 확인:</label>
+                <form className="flex flex-col items-start gap-2" onSubmit={handlePasswordSubmit}>
+                    <label className="mb-1">{currentStep + 1}/{passwordCount} 비밀번호 확인:</label>
                     <div className="flex flex-row items-center gap-2">
                         <Input
                             type="password"
@@ -123,32 +105,30 @@ export default function PasswordVerify({ address, onAllCorrect }) {
                             제출
                         </Button>
                     </div>
-                    {submitResults[currentStep] === '올바른 비밀번호입니다.' && (
-                        <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle className="flex items-center gap-2">
-                                        <CheckCircle2Icon className="w-5 h-5 text-green-600" />
-                                        올바른 비밀번호입니다.
-                                    </AlertDialogTitle>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogAction
-                                        onClick={() => {
-                                            setOpenDialog(false);
-                                            handleNextStep();
-                                        }}
-                                    >
-                                        다음
-                                    </AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                    )}
+                    <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle className="flex items-center gap-2">
+                                    <CheckCircle2Icon className="w-5 h-5 text-green-600" />
+                                    올바른 비밀번호입니다.
+                                </AlertDialogTitle>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogAction
+                                    onClick={() => {
+                                        setOpenDialog(false);
+                                        handleNextStep();
+                                    }}
+                                >
+                                    다음
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </form>
             )}
             {isAllCorrect && (
-                <div className="text-green-600 text-lg mt-2">모든 비번을 올바르게 입력하셨습니다</div>
+                <div className="text-green-600 text-lg mt-2">모든 비밀번호를 올바르게 입력하셨습니다</div>
             )}
         </div>
     );

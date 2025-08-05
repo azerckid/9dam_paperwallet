@@ -4,20 +4,22 @@ import { useWallet } from "@/contexts/WalletContext";
 
 import Header from "@/components/layout/Header";
 import Center from "@/components/layout/Center";
+import CheckPassword from "@/components/verify/check/CheckPassword";
+import CheckSuccess from "@/components/verify/check/CheckSuccess";
 
 const CheckPwdPage = () => {
   const router = useRouter();
   const { address } = router.query;
-  const { fetchWalletInfo } = useWallet();
+  const { walletInfo, fetchWalletInfo, isVerified } = useWallet();
+  const [allPasswordsCorrect, setAllPasswordsCorrect] = useState(false);
 
   useEffect(() => {
     const checkWalletStatus = async () => {
       if (!address) return;
       try {
         const info = await fetchWalletInfo(address);
-        console.log(info);
         if (info) {
-          if (info.passwordCount == 0) {
+          if (info.passwordCount === 0) {
             router.push(`/verify/wallet/${address}`);
             return;
           }
@@ -33,7 +35,12 @@ const CheckPwdPage = () => {
   return (
     <>
       <Header back={true} />
-      <Center></Center>
+      <Center>
+        {walletInfo && walletInfo.passwordCount > 0 && !allPasswordsCorrect && (
+          <CheckPassword setAllPasswordsCorrect={setAllPasswordsCorrect} />
+        )}
+        {allPasswordsCorrect && isVerified && <CheckSuccess />}
+      </Center>
     </>
   );
 };

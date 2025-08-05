@@ -3,12 +3,12 @@ import { useRouter } from "next/router";
 import { useWallet } from "@/contexts/WalletContext";
 
 import Title from "../Title";
-import RegisterInfoCard from "./RegisterInfoCard";
+import CheckInfoCard from "./CheckInfoCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CircleCheckBig, ShieldCheck } from "lucide-react";
+import { CircleCheckBig, CirclePlus } from "lucide-react";
 
-const RegisterSuccess = () => {
+const CheckSuccess = () => {
   const router = useRouter();
   const { walletInfo } = useWallet();
 
@@ -19,31 +19,36 @@ const RegisterSuccess = () => {
           <CircleCheckBig size={48} />
         </div>
         <Title
-          title="등록 완료!"
-          subTitle="지갑이 성공적으로 등록되었습니다."
+          title="검증 성공!"
+          subTitle="비밀번호가 일치합니다. 새 비밀번호를 등록하시겠습니까?"
         />
-        <RegisterInfoCard walletInfo={walletInfo} />
-        <Card variant="noticeGreen">
-          <CardHeader variant="noticeGreen">
+        <CheckInfoCard walletInfo={walletInfo} />
+        <Card variant="noticeBlue">
+          <CardHeader variant="noticeBlue">
             <CardTitle>
-              <ShieldCheck className="text-[#10B981]" />
-              보안 완료
+              <CirclePlus />
+              추가 등록 안내
             </CardTitle>
           </CardHeader>
-          <CardContent variant="noticeGreen">
-            새로운 비밀번호가 안전하게 등록되어 지갑 보안이 강화되었습니다.
+          <CardContent variant="noticeBlue">
+            새로운 비밀번호를 추가로 등록하여 보안을 강화할 수 있습니다.
           </CardContent>
         </Card>
         <Button
           variant="defaultGreen"
           size="xl"
-          onClick={() => router.push("/")}
+          onClick={() =>
+            router.push(`/verify/register/${walletInfo.address}?verified=true`)
+          }
         >
-          메인으로
+          예, 등록하겠습니다
+        </Button>
+        <Button variant="outline" size="lg" onClick={() => router.push("/")}>
+          아니오, 돌아가기
         </Button>
       </main>
     </div>
   );
 };
 
-export default RegisterSuccess;
+export default CheckSuccess;
