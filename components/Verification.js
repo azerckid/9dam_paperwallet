@@ -1,161 +1,37 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
+import { useRouter } from "next/router";
 import { useWallet } from "@/contexts/WalletContext";
 import isValidBitcoinAddress from "../utils/CheckAddress";
 
 import Scanner from "./QRscan/QRcodeReader";
-import PasswordFirstRegister from "./Password/PasswordFirstRegister";
-import PasswordVerify from "./Password/PasswordVerify";
-import PasswordAdd from "./Password/PasswordAdd";
+import Title from "./verify/Title";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Camera, CircleQuestionMark, Play, ShieldCheck } from "lucide-react";
-import { useRouter } from "next/router";
-import Title from "./verify/Title";
 
 export default function Verification() {
   const router = useRouter();
-  const { updateWalletInfo } = useWallet();
-
+  const { updateWalletInfo, fetchWalletInfo } = useWallet();
   const [address, setAddress] = useState("");
-  //   const [passwordCount, setPasswordCount] = useState(0); // 등록된 비밀번호 개수
   const [scannerOn, setScannerOn] = useState(false);
-  //   const [step, setStep] = useState(""); // '', 'first', 'verify', 'add'
-  // 잔액 관련 상태 추가
-  //   const [balance, setBalance] = useState(null);
-  //   const [isLoadingBalance, setIsLoadingBalance] = useState(false);
-  //   const [balanceError, setBalanceError] = useState("");
-
-  // address로 등록된 비밀번호 개수 fetch
-  // const fetchPasswordCount = async (address) => {
-  //   if (!address) return 0;
-  //   try {
-  //     const response = await fetch("/api/wallet/findWalletIdByAddress", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ account: address }),
-  //     });
-  //     if (!response.ok) throw new Error("Network response was not ok");
-  //     const walletId = await response.json();
-  //     if (!walletId) return 0;
-  //     const pwRes = await fetch("/api/password/getPasswords", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ walletAccountId: walletId }),
-  //     });
-  //     if (!pwRes.ok) throw new Error("Failed to fetch passwords");
-  //     const pwData = await pwRes.json();
-  //     return Array.isArray(pwData) ? pwData.length : 0;
-  //   } catch {
-  //     return 0;
-  //   }
-  // };
-
-  // const fetchWalletInfo = async (data) => {
-  //   if (!data) return null;
-
-  //   try {
-  //     // 1. 비밀번호 개수
-  //     const passwordCount = await fetchPasswordCount(data);
-  //     console.log(passwordCount);
-
-  //     // 2. 잔액 조회
-  //     const balanceResponse = await fetch(
-  //       `/api/proxy-balance?address=${encodeURIComponent(data.trim())}`
-  //     );
-  //     console.log(balanceResponse);
-
-  //     let balance = null;
-  //     let balanceError = "";
-
-  //     if (balanceResponse.ok) {
-  //       const balanceData = await balanceResponse.json();
-  //       if (
-  //         balanceData &&
-  //         typeof balanceData.txHistory?.balanceSat === "number"
-  //       ) {
-  //         balance = balanceData.txHistory.balanceSat;
-  //       } else {
-  //         balanceError = "잔액 정보 없음";
-  //       }
-  //     } else {
-  //       balanceError = "잔액 조회 실패";
-  //     }
-
-  //     const walletInfo = {
-  //       address: data,
-  //       balance,
-  //       balanceError,
-  //       passwordCount,
-  //       isRegistered: passwordCount > 0,
-  //     };
-  //     console.log(walletInfo);
-
-  //     return walletInfo;
-  //   } catch (error) {
-  //     console.error("지갑 정보 조회 실패:", error);
-  //     return null;
-  //   }
-  // };
-
-  // 주소가 바뀔 때마다 잔액 조회
-  //   useEffect(() => {
-  //     if (!walletAccount) {
-  //       setBalance(null);
-  //       setBalanceError("");
-  //       return;
-  //     }
-  //     setIsLoadingBalance(true);
-  //     setBalanceError("");
-  //     fetch(
-  //       `/api/proxy-balance?address=${encodeURIComponent(walletAccount.trim())}`
-  //     )
-  //       .then((res) => {
-  //         if (!res.ok) throw new Error("잔액 조회 실패");
-  //         return res.json();
-  //       })
-  //       .then((json) => {
-  //         if (json && typeof json.txHistory?.balanceSat === "number") {
-  //           setBalance(json.txHistory.balanceSat);
-  //         } else {
-  //           setBalance(null);
-  //           setBalanceError("잔액 정보 없음");
-  //         }
-  //       })
-  //       .catch(() => {
-  //         setBalance(null);
-  //         setBalanceError("잔액 조회 실패");
-  //       })
-  //       .finally(() => setIsLoadingBalance(false));
-  //   }, [walletAccount]);
 
   const getWalletAccount = async (data) => {
-    // setWalletAccount(data);
-    if (data && isValidBitcoinAddress(data)) {
-      setScannerOn(false);
-      const walletData = await fetchWalletInfo(data);
+    if (!isValidBitcoinAddress(data)) {
+      alert("올바른 지갑주소를 입력해주세요.");
+      return null;
+    }
+    setScannerOn(false);
+    const walletData = await fetchWalletInfo(data);
 
-      if (walletData) {
-        updateWalletInfo(walletData);
-        router.push(`/verify/wallet/${walletData.address}`);
-      } else {
-        alert("지갑 정보 조회 실패");
-      }
+    if (walletData) {
+      updateWalletInfo(walletData);
+      router.push(`/verify/wallet/${walletData.address}`);
+    } else {
+      alert("지갑 정보 조회 실패");
     }
   };
-
-  //   const handleAllPasswordCorrect = (count) => {
-  //     setPasswordCount(count);
-  //     setStep("add");
-  //   };
-
-  //   const handleAddSuccess = async () => {
-  //     // 비밀번호 추가 후 다시 검증 단계로 돌아가거나, 원하는 UX에 맞게 처리
-  //     const count = await fetchPasswordCount(walletAccount);
-  //     setPasswordCount(count);
-  //     setStep("verify");
-  //   };
 
   // QR Scan ON/OFF 토글 핸들러: 상태 모두 초기화
   const handleScannerToggle = () => {

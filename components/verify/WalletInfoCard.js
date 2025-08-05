@@ -1,8 +1,9 @@
 import React from "react";
+
 import Divider from "../Layout/Divider";
+import StatusBadge from "./StatusBadge";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Wallet } from "lucide-react";
-import StatusBadge from "./StatusBadge";
 
 const WalletInfoCard = ({ walletInfo }) => {
   return (

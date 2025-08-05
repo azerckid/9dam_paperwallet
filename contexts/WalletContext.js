@@ -10,9 +10,13 @@ export function WalletProvider({ children }) {
     passwordCount: 0,
     isRegistered: false,
     isProtected: false,
+    lastUpdate: "",
   });
 
+  const [isVerified, setIsVerified] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [error, setError] = useState(null);
 
   const fetchPasswordCount = async (address) => {
     if (!address) return 0;
@@ -33,7 +37,13 @@ export function WalletProvider({ children }) {
       });
       if (!pwRes.ok) throw new Error("Failed to fetch passwords");
       const pwData = await pwRes.json();
-      return Array.isArray(pwData) ? pwData.length : 0;
+      return {
+        passwordCount: Array.isArray(pwData) ? pwData.length : 0,
+        lastUpdate:
+          Array.isArray(pwData) && pwData.length > 0
+            ? pwData[pwData.length - 1].updatedAt
+            : "",
+      };
     } catch {
       return 0;
     }
@@ -41,11 +51,12 @@ export function WalletProvider({ children }) {
 
   const fetchWalletInfo = async (address) => {
     if (!address) return null;
-
     setIsLoading(true);
+    setError(null);
+
     try {
       // 1. 비밀번호 개수
-      const passwordCount = await fetchPasswordCount(address);
+      const { passwordCount, lastUpdate } = await fetchPasswordCount(address);
 
       // 2. 잔액 조회
       const balanceResponse = await fetch(
@@ -62,6 +73,7 @@ export function WalletProvider({ children }) {
           typeof balanceData.txHistory?.balanceSat === "number"
         ) {
           balance = balanceData.txHistory.balanceSat;
+          balance = balance / 100000000;
         } else {
           balanceError = "잔액 정보 없음";
         }
@@ -75,12 +87,14 @@ export function WalletProvider({ children }) {
         balanceError,
         passwordCount,
         isRegistered: passwordCount > 0,
+        lastUpdate: lastUpdate,
       };
 
       setWalletInfo(newWalletInfo);
       return newWalletInfo;
     } catch (error) {
       console.error("지갑 정보 조회 실패:", error);
+      setError(error.message);
       return null;
     } finally {
       setIsLoading(false);
@@ -91,18 +105,24 @@ export function WalletProvider({ children }) {
     setWalletInfo((prev) => ({ ...prev, ...newInfo }));
   };
 
+  const setVerified = (verified) => {
+    setIsVerified(verified);
+  };
+
   return (
     <WalletContext.Provider
       value={{
-        // walletInfo,
-        walletInfo: {
-          address: walletInfo.address,
-          balance: walletInfo.balance,
-          balanceError: walletInfo.balanceError,
-          passwordCount: 0,
-          isRegistered: false,
-          isProtected: false,
-        },
+        walletInfo,
+        // walletInfo: {
+        //   address: walletInfo.address,
+        //   balance: walletInfo.balance,
+        //   balanceError: walletInfo.balanceError,
+        //   passwordCount: 0,
+        //   isRegistered: false,
+        //   isProtected: false,
+        // },
+        isVerified,
+        setIsVerified,
         updateWalletInfo,
         fetchWalletInfo,
         isLoading,

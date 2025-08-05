@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useWallet } from "@/contexts/WalletContext";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import Title from "./verify/Title";
 import WalletInfoCard from "./verify/WalletInfoCard";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Lock,
   PlusCircle,
@@ -29,10 +30,6 @@ const WalletInformation = () => {
       fetchWalletInfo(address);
     }
   }, [address, walletInfo.address]);
-
-  useEffect(() => {
-    console.log(walletInfo);
-  }, [walletInfo]);
 
   return (
     <div className="min-h-screen">
@@ -184,7 +181,13 @@ const WalletInformation = () => {
                 이 지갑은 아직 등록되지 않았습니다. 최초 등록이 가능합니다.
               </CardContent>
             </Card>
-            <Button variant="defaultGreen" size="xl">
+            <Button
+              variant="defaultGreen"
+              size="xl"
+              onClick={() =>
+                router.push(`/verify/register/${walletInfo.address}`)
+              }
+            >
               <Lock />새 비밀번호 등록하기
             </Button>
             <Card variant="destructive">
