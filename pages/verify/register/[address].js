@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useWallet } from "@/contexts/WalletContext";
 
-import Header from "@/components/Layout/Header";
-import Center from "@/components/Layout/Center";
-import RegisterPassword from "@/components/RegisterPassword";
-import RegisterSuccess from "@/components/RegisterSuccess";
+import Header from "@/components/layout/Header";
+import Center from "@/components/layout/Center";
+import RegisterPassword from "@/components/verify/register/RegisterPassword";
+import RegisterSuccess from "@/components/verify/register/RegisterSuccess";
 
 const RegisterPwdPage = () => {
   const router = useRouter();

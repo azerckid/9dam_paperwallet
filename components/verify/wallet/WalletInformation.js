@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useWallet } from "@/contexts/WalletContext";
 
-import Title from "./verify/Title";
-import WalletInfoCard from "./verify/WalletInfoCard";
+import Title from "../Title";
+import WalletInfoCard from "./WalletInfoCard";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -152,7 +152,13 @@ const WalletInformation = () => {
                   </Button>
                 </CardContent>
               </Card>
-              <Button variant="defaultGreen" size="xl">
+              <Button
+                variant="defaultGreen"
+                size="xl"
+                onClick={() =>
+                  router.push(`/verify/check/${walletInfo.address}`)
+                }
+              >
                 <SquarePen />
                 비밀번호 입력 후 검증하기
               </Button>

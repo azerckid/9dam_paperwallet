@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useWallet } from "@/contexts/WalletContext";
 import { sha256 } from "js-sha256";
 
-import Title from "./verify/Title";
+import Title from "../Title";
+import ErrorDialog from "@/components/layout/ErrorDialog";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { Lightbulb, Shield, Eye, EyeOff } from "lucide-react";
-import { Checkbox } from "./ui/checkbox";
-import { Input } from "./ui/input";
-import ErrorDialog from "./Layout/ErrorDialog";
 
 const RegisterPassword = ({ onSuccess }) => {
   const { walletInfo, isVerified } = useWallet();

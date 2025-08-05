@@ -2,10 +2,10 @@ import { useState } from "react";
 
 import { useRouter } from "next/router";
 import { useWallet } from "@/contexts/WalletContext";
-import isValidBitcoinAddress from "../utils/CheckAddress";
+import isValidWalletAddress from "@/utils/CheckAddress";
 
-import Scanner from "./QRscan/QRcodeReader";
-import Title from "./verify/Title";
+import Scanner from "../qr/QRcodeReader";
+import Title from "./Title";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +18,7 @@ export default function Verification() {
   const [scannerOn, setScannerOn] = useState(false);
 
   const getWalletAccount = async (data) => {
-    if (!isValidBitcoinAddress(data)) {
+    if (!isValidWalletAddress(data)) {
       alert("올바른 지갑주소를 입력해주세요.");
       return null;
     }

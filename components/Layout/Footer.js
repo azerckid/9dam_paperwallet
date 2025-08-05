@@ -18,9 +18,9 @@ const Footer = () => {
             플랫폼입니다.
           </p>
           <div className="flex justify-center space-x-6 md:space-x-10 text-[#9CA3AF]">
-            {menuItems.map((menu) => (
+            {menuItems.map((menu, index) => (
               <Link
-                key={menu.href}
+                key={index}
                 href={menu.href}
                 target="_blank"
                 rel="noopener noreferrer"

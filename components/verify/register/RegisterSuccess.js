@@ -2,10 +2,10 @@ import React from "react";
 import { useRouter } from "next/router";
 import { useWallet } from "@/contexts/WalletContext";
 
-import Title from "./verify/Title";
-import RegisterInfoCard from "./verify/RegisterInfoCard";
+import Title from "../Title";
+import RegisterInfoCard from "./RegisterInfoCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { CircleCheckBig, ShieldCheck } from "lucide-react";
 
 const RegisterSuccess = () => {

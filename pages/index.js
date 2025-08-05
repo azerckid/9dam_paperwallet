@@ -1,8 +1,8 @@
 import Head from "next/head";
-import Center from "@/components/Layout/Center";
-import Header from "@/components/Layout/Header";
+import Center from "@/components/layout/Center";
+import Header from "@/components/layout/Header";
 import Landing from "@/components/Landing";
-import Footer from "@/components/Layout/Footer";
+import Footer from "@/components/layout/Footer";
 
 export default function Home() {
   return (
