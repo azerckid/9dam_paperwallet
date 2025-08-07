@@ -49,7 +49,7 @@ export function WalletProvider({ children }) {
             : "",
       };
     } catch {
-      return 0;
+      return { passwordCount: 0, lastUpdate: "" };
     }
   };
 
@@ -111,6 +111,7 @@ export function WalletProvider({ children }) {
         isRegistered: passwordCount > 0,
         lastUpdate: lastUpdate,
       };
+      console.log(newWalletInfo);
 
       setWalletInfo(newWalletInfo);
       return newWalletInfo;

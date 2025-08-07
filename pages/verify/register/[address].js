@@ -14,6 +14,10 @@ const RegisterPwdPage = () => {
   const [onSuccess, setOnSuccess] = useState(false);
 
   useEffect(() => {
+    console.log("register 성공? ", onSuccess);
+  }, [onSuccess]);
+
+  useEffect(() => {
     const checkWalletStatus = async () => {
       if (!address) return;
 
@@ -24,10 +28,16 @@ const RegisterPwdPage = () => {
 
         if (info) {
           const isVerifiedFromURL = verified === "true";
+
+          // 1) 첫 저장의 경우
+          if (info.passwordCount === 0) return;
+          // 2) 기존 비밀번호가 있고 검증 되지 않은 경우
           if (info.passwordCount > 0 && !isVerified && !isVerifiedFromURL) {
             router.push(`/verify/check/${address}`);
             return;
           }
+          // 3) 검증된 상태에서 추가 등록하는 경우
+          if (isVerifiedFromURL) return;
         }
       } catch (error) {
         console.error("지갑 상태 확인 실패:", error);

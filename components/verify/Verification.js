@@ -37,11 +37,6 @@ export default function Verification() {
   const handleScannerToggle = () => {
     setScannerOn((prev) => {
       const next = !prev;
-      if (next) {
-        // setWalletAccount("");
-        // setPasswordCount(0);
-        // setStep("");
-      }
       return next;
     });
   };

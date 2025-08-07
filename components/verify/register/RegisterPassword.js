@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Lightbulb, Shield, Eye, EyeOff } from "lucide-react";
 
 const RegisterPassword = ({ onSuccess }) => {
-  const { walletInfo, isVerified } = useWallet();
+  const { walletInfo, isVerified, fetchWalletInfo } = useWallet();
 
   const [isChecked, setIsChecked] = useState(false); // "적었습니다" 체크박스
   const [password, setPassword] = useState(""); // 비밀번호 입력
@@ -38,7 +38,7 @@ const RegisterPassword = ({ onSuccess }) => {
     setHashing(hash);
   };
 
-  const saveSecret = async () => {
+  const saveSecret = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch("/api/secrets/setSecret", {
@@ -46,12 +46,13 @@ const RegisterPassword = ({ onSuccess }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           password: hashing,
-          walletAccountId: walletInfo.address,
+          walletAccountId: walletInfo.walletId,
         }),
       });
       if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
       if (data) {
+        await fetchWalletInfo(walletInfo.address);
         onSuccess(true);
       } else {
         setError("비밀번호 등록에 실패했습니다.");
@@ -135,6 +136,7 @@ const RegisterPassword = ({ onSuccess }) => {
                         className="pr-12"
                       />
                       <Button
+                        type="button"
                         variant="ghost"
                         className="absolute right-2 top-1/2 -translate-y-1/2 p-2 h-auto w-auto"
                         onClick={() => setShowPassword((prev) => !prev)}
@@ -159,6 +161,7 @@ const RegisterPassword = ({ onSuccess }) => {
                         className="pr-12"
                       />
                       <Button
+                        type="button"
                         variant="ghost"
                         className="absolute right-2 top-1/2 -translate-y-1/2 p-2 h-auto w-auto"
                         onClick={() => setShowPasswordChk((prev) => !prev)}

@@ -57,12 +57,7 @@ const CheckPassword = ({ setAllPasswordsCorrect }) => {
         if (currentStep < walletInfo.passwordCount - 1) {
           // 다음 단계로 이동
           setCurrentStep(currentStep + 1);
-          setInputValues((prev) => {
-            const newValues = [...prev];
-            newValues[currentStep] = ""; // 현재 입력값 초기화
-            return newValues;
-          });
-          setInputStepGuide(`${currentStep + 1}번 비밀번호를 입력해주세요.`);
+          setInputStepGuide(`${currentStep + 2}번 비밀번호를 입력해주세요.`);
         } else {
           // 모든 비밀번호 검증 완료
           setAllPasswordsCorrect(true);
@@ -108,23 +103,25 @@ const CheckPassword = ({ setAllPasswordsCorrect }) => {
   const renderVerifiedPasswords = () => {
     return (
       <div className="space-y-4">
-        <div>
-          <label className="flex justify-between items-center text-sm md:text-base mb-2">
-            {currentStep + 1}번 비밀번호
-            <span className="px-2 py-1 text-xs md:text-sm font-bold rounded-full bg-[#DCFCE7] text-[#166534]">
-              완료
-            </span>
-          </label>
-          <div className="relative">
-            <Input
-              type="password"
-              disabled
-              value={inputValues[currentStep] || ""}
-              className="bg-[#DCFCE7] text-[#166534] border-[#BBF7D0] pr-12"
-            />
-            <Check className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#166534]" />
+        {verifiedSteps.map((index) => (
+          <div key={index}>
+            <label className="flex justify-between items-center text-sm md:text-base mb-2">
+              {index + 1}번 비밀번호
+              <span className="px-2 py-1 text-xs md:text-sm font-bold rounded-full bg-[#DCFCE7] text-[#166534]">
+                완료
+              </span>
+            </label>
+            <div className="relative">
+              <Input
+                type="password"
+                disabled
+                value={inputValues[index] || ""}
+                className="bg-[#DCFCE7] text-[#166534] border-[#BBF7D0] pr-12"
+              />
+              <Check className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#166534]" />
+            </div>
           </div>
-        </div>
+        ))}
       </div>
     );
   };
@@ -163,7 +160,6 @@ const CheckPassword = ({ setAllPasswordsCorrect }) => {
           </Card>
           <div className="flex flex-col gap-4">
             {verifiedSteps.length > 0 && renderVerifiedPasswords()}
-
             {renderCurrentPasswordInput()}
           </div>
 
