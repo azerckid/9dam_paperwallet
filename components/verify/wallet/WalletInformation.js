@@ -19,6 +19,8 @@ import {
   Info,
   Phone,
 } from "lucide-react";
+import { EXTERNAL_LINKS } from "@/lib/constants";
+import Link from "next/link";
 
 const WalletInformation = () => {
   const router = useRouter();
@@ -68,7 +70,13 @@ const WalletInformation = () => {
                   </span>
                 </CardContent>
               </Card>
-              <Button variant="defaultOrange" size="xl">
+              <Button
+                variant="defaultOrange"
+                size="xl"
+                onClick={() =>
+                  window.open(EXTERNAL_LINKS.MOBICK_HALL, "_blank")
+                }
+              >
                 <MapPin />
                 가까운 회관 찾기
               </Button>
@@ -81,7 +89,11 @@ const WalletInformation = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Button size="lg" className="text-[#6B7280] w-full">
+                  <Button
+                    size="lg"
+                    className="text-[#6B7280] w-full"
+                    onClick={() => window.open(EXTERNAL_LINKS.FAQ, "_blank")}
+                  >
                     <MessageCircle />
                     고객센터 문의
                   </Button>
@@ -146,7 +158,11 @@ const WalletInformation = () => {
                   <span>
                     의심스러운 지갑이라면 아래 버튼을 눌러 신고해주세요.
                   </span>
-                  <Button variant="warning" size="lg">
+                  <Button
+                    variant="warning"
+                    size="lg"
+                    onClick={() => window.open(EXTERNAL_LINKS.FAQ, "_blank")}
+                  >
                     <TriangleAlert className="text-[#F59E0B]" />
                     문의 / 신고하기
                   </Button>
@@ -162,7 +178,13 @@ const WalletInformation = () => {
                 <SquarePen />
                 비밀번호 입력 후 검증하기
               </Button>
-              <Button variant="destructive" size="lg">
+              <Button
+                variant="destructive"
+                size="lg"
+                onClick={() =>
+                  window.open(EXTERNAL_LINKS.YOUTUBE_GUIDE, "_blank")
+                }
+              >
                 <Play />
                 검증 방법 영상 가이드
               </Button>
@@ -211,7 +233,11 @@ const WalletInformation = () => {
                   실물 지갑 정보와 일치하지 않으면 위조 가능성이 있습니다.
                 </span>
                 <span>문제가 있다면 문의해주세요.</span>
-                <Button variant="destructiveInvert" size="lg">
+                <Button
+                  variant="destructiveInvert"
+                  size="lg"
+                  onClick={() => window.open(EXTERNAL_LINKS.FAQ, "_blank")}
+                >
                   <TriangleAlert />
                   문의 / 신고하기
                 </Button>

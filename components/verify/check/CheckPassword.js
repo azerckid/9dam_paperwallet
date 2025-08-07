@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, CircleCheckBig, CircleQuestionMark, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { EXTERNAL_LINKS } from "@/lib/constants";
 
 const CheckPassword = ({ setAllPasswordsCorrect }) => {
   const { walletInfo, setIsVerified } = useWallet();
@@ -169,6 +170,12 @@ const CheckPassword = ({ setAllPasswordsCorrect }) => {
           </Button>
           <p className="text-[#9CA3AF] flex gap-1 justify-center items-center text-sm md:text-base">
             <CircleQuestionMark /> 비밀번호를 찾을 수 없나요?
+            <span
+              className="cursor-pointer underline"
+              onClick={() => window.open(EXTERNAL_LINKS.FAQ, "_blank")}
+            >
+              문의하기
+            </span>
           </p>
         </form>
       </main>

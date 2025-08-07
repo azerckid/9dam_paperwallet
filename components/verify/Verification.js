@@ -10,6 +10,7 @@ import Title from "./Title";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Camera, CircleQuestionMark, Play, ShieldCheck } from "lucide-react";
+import { EXTERNAL_LINKS } from "@/lib/constants";
 
 export default function Verification() {
   const router = useRouter();
@@ -76,52 +77,6 @@ export default function Verification() {
               <Scanner getWalletAccount={getWalletAccount} />
             </div>
           )}
-          {/* {scannerOn ? (
-            <div className="flex flex-col items-center">
-              <Scanner getWalletAccount={getWalletAccount} />
-            </div>
-          ) : (
-            <>
-              {walletAccount && (
-                <div className="my-2 text-base font-semibold">
-                  address : {walletAccount}
-                  <div className="mt-1 text-sm font-normal">
-                    {isLoadingBalance && <span>잔액 조회 중...</span>}
-                    {!isLoadingBalance && balance !== null && (
-                      <span>
-                        잔액: {balance} Satoshi ({(balance / 1e8).toFixed(8)}{" "}
-                        BTC)
-                      </span>
-                    )}
-                    {!isLoadingBalance && balanceError && (
-                      <span className="text-red-500">{balanceError}</span>
-                    )}
-                  </div>
-                </div>
-              )}
-              {step === "first" && (
-                <PasswordFirstRegister
-                  address={walletAccount}
-                  onSuccess={handleAddSuccess}
-                />
-              )}
-              {step === "verify" && (
-                <PasswordVerify
-                  address={walletAccount}
-                  onAllCorrect={handleAllPasswordCorrect}
-                />
-              )}
-              {step === "add" && (
-                <div className="flex flex-col items-center mt-8">
-                  <PasswordAdd
-                    address={walletAccount}
-                    onSuccess={handleAddSuccess}
-                    index={passwordCount}
-                  />
-                </div>
-              )}
-            </>
-          )} */}
 
           <div className="flex items-center">
             <div className="flex-grow border-t border-[#9CA3AF]" />
@@ -155,8 +110,14 @@ export default function Verification() {
               도움이 필요하신가요?
               <span>가이드 보기</span>
             </p>
-            {/* TODO : link */}
-            <Button variant="destructive" size="xl" className="w-full">
+            <Button
+              variant="destructive"
+              size="xl"
+              className="w-full"
+              onClick={() =>
+                window.open(EXTERNAL_LINKS.YOUTUBE_GUIDE, "_blank")
+              }
+            >
               <Play /> 유튜브 가이드 영상 보기
             </Button>
           </div>
