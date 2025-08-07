@@ -21,10 +21,6 @@ const CheckPassword = ({ setAllPasswordsCorrect }) => {
   );
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    console.log(currentStep, inputValues, verifiedSteps);
-  }, [currentStep, inputValues, verifiedSteps]);
-
   const handleInputChange = (value) => {
     setInputValues((prev) => {
       const newValues = [...prev];

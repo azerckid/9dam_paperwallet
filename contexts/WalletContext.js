@@ -38,9 +38,7 @@ export function WalletProvider({ children }) {
       });
       if (!pwRes.ok) throw new Error("Failed to fetch passwords");
       const pwData = await pwRes.json();
-      console.log(pwData);
       const updatedAt = pwData[pwData.length - 1].updated_at;
-      console.log(updatedAt);
       return {
         passwordCount: Array.isArray(pwData) ? pwData.length : 0,
         lastUpdate:
@@ -111,7 +109,6 @@ export function WalletProvider({ children }) {
         isRegistered: passwordCount > 0,
         lastUpdate: lastUpdate,
       };
-      console.log(newWalletInfo);
 
       setWalletInfo(newWalletInfo);
       return newWalletInfo;

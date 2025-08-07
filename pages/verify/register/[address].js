@@ -14,17 +14,13 @@ const RegisterPwdPage = () => {
   const [onSuccess, setOnSuccess] = useState(false);
 
   useEffect(() => {
-    console.log("register 성공? ", onSuccess);
-  }, [onSuccess]);
-
-  useEffect(() => {
     const checkWalletStatus = async () => {
       if (!address) return;
 
       try {
         const info = await fetchWalletInfo(address);
-        console.log(info);
-        console.log("isVerified: ", isVerified);
+        // console.log(info);
+        // console.log("isVerified: ", isVerified);
 
         if (info) {
           const isVerifiedFromURL = verified === "true";
