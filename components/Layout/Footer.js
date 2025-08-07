@@ -1,12 +1,21 @@
 import React from "react";
 import Link from "next/link";
 import { Mail, MessageCircle, Play } from "lucide-react";
+import { EXTERNAL_LINKS } from "@/lib/constants";
 
 const Footer = () => {
   const menuItems = [
-    { href: "/", label: "문의하기", icon: <Mail /> },
-    { href: "/", label: "오픈채팅", icon: <MessageCircle /> },
-    { href: "/", label: "가이드 영상", icon: <Play /> },
+    { href: EXTERNAL_LINKS.FAQ, label: "문의하기", icon: <Mail /> },
+    {
+      href: EXTERNAL_LINKS.KAKAO_OPENCHAT,
+      label: "오픈채팅",
+      icon: <MessageCircle />,
+    },
+    {
+      href: EXTERNAL_LINKS.YOUTUBE_GUIDE,
+      label: "가이드 영상",
+      icon: <Play />,
+    },
   ];
 
   return (
