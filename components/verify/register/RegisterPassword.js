@@ -3,7 +3,7 @@ import { useWallet } from "@/contexts/WalletContext";
 import { sha256 } from "js-sha256";
 
 import Title from "../Title";
-import ErrorDialog from "@/components/layout/ErrorDialog";
+import ErrorDialog from "@/components/Layout/ErrorDialog";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
