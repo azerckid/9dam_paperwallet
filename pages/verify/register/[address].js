@@ -41,7 +41,7 @@ const RegisterPwdPage = () => {
     };
 
     checkWalletStatus();
-  }, [address]);
+  }, [address, fetchWalletInfo, isVerified, router, verified]);
 
   return (
     <>

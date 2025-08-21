@@ -44,7 +44,7 @@ export default function WalletList() {
                     setBalances(prev => ({ ...prev, [w.account]: { value: null, loading: false, error: '잔액 조회 실패' } }));
                 });
         });
-    }, [wallets]);
+    }, [wallets, balances]);
 
     // CSV Export 기능 (잔액은 미포함)
     const handleExportCSV = () => {

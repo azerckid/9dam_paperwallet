@@ -31,7 +31,7 @@ const WalletInformation = () => {
     if (address && address !== walletInfo.address) {
       fetchWalletInfo(address);
     }
-  }, [address, walletInfo.address]);
+  }, [address, walletInfo.address, fetchWalletInfo]);
 
   return (
     <div className="min-h-screen">

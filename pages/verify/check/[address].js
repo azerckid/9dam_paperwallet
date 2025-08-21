@@ -30,7 +30,7 @@ const CheckPwdPage = () => {
     };
 
     checkWalletStatus();
-  }, [address]);
+  }, [address, fetchWalletInfo, router]);
 
   return (
     <>

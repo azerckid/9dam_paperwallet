@@ -29,7 +29,7 @@ export function WalletStatsTable({ stats }) {
                     setBalances(prev => ({ ...prev, [row.address]: { value: null, loading: false, error: '잔액 조회 실패' } }));
                 });
         });
-    }, [stats]);
+    }, [stats, balances]);
 
     return (
         <Card className="p-3">
