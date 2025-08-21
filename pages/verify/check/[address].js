@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useWallet } from "@/contexts/WalletContext";
 
-import Header from "@/components/layout/Header";
-import Center from "@/components/layout/Center";
+import Header from "../../../components/Layout/Header";
+import Center from "../../../components/Layout/Center";
 import CheckPassword from "@/components/verify/check/CheckPassword";
 import CheckSuccess from "@/components/verify/check/CheckSuccess";
 
