@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useWallet } from "@/contexts/WalletContext";
 
@@ -6,11 +6,12 @@ import Title from "../Title";
 import CheckInfoCard from "./CheckInfoCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CircleCheckBig, CirclePlus } from "lucide-react";
+import { CircleCheckBig, CirclePlus, Loader2 } from "lucide-react";
 
 const CheckSuccess = () => {
   const router = useRouter();
   const { walletInfo } = useWallet();
+  const [isNavigating, setIsNavigating] = useState(false);
 
   return (
     <div className="min-h-screen">
@@ -37,11 +38,25 @@ const CheckSuccess = () => {
         <Button
           variant="defaultGreen"
           size="xl"
-          onClick={() =>
-            router.push(`/verify/register/${walletInfo.address}?verified=true`)
-          }
+          disabled={isNavigating}
+          onClick={async () => {
+            setIsNavigating(true);
+            try {
+              await router.push(`/verify/register/${walletInfo.address}?verified=true`);
+            } catch (error) {
+              console.error("페이지 이동 실패:", error);
+              setIsNavigating(false);
+            }
+          }}
         >
-          예, 등록하겠습니다
+          {isNavigating ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              이동 중...
+            </>
+          ) : (
+            "예, 등록하겠습니다"
+          )}
         </Button>
         <Button variant="outline" size="lg" onClick={() => router.push("/")}>
           아니오, 돌아가기

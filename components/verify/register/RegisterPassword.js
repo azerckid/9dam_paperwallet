@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Lightbulb, Shield, Eye, EyeOff } from "lucide-react";
 
 const RegisterPassword = ({ onSuccess }) => {
-  const { walletInfo, isVerified, fetchWalletInfo } = useWallet();
+  const { walletInfo, isVerified, updatePasswordCount } = useWallet();
 
   const [isChecked, setIsChecked] = useState(false); // "적었습니다" 체크박스
   const [password, setPassword] = useState(""); // 비밀번호 입력
@@ -40,6 +40,13 @@ const RegisterPassword = ({ onSuccess }) => {
 
   const saveSecret = async (e) => {
     e.preventDefault();
+
+    // 로딩 상태 표시
+    const submitButton = e.target.querySelector('button[type="submit"]');
+    const originalText = submitButton.textContent;
+    submitButton.disabled = true;
+    submitButton.textContent = "등록 중...";
+
     try {
       const response = await fetch("/api/secrets/setSecret", {
         method: "POST",
@@ -49,10 +56,13 @@ const RegisterPassword = ({ onSuccess }) => {
           walletAccountId: walletInfo.walletId,
         }),
       });
+
       if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
+
       if (data) {
-        await fetchWalletInfo(walletInfo.address);
+        // 비밀번호 개수만 빠르게 업데이트 (잔액 조회 제외)
+        await updatePasswordCount(walletInfo.address, walletInfo.walletId);
         onSuccess(true);
       } else {
         setError("비밀번호 등록에 실패했습니다.");
@@ -61,6 +71,10 @@ const RegisterPassword = ({ onSuccess }) => {
     } catch (error) {
       setError("알 수 없는 오류가 발생했습니다: " + (error.message || ""));
       setShowErrorDialog(true);
+    } finally {
+      // 버튼 상태 복원
+      submitButton.disabled = false;
+      submitButton.textContent = originalText;
     }
   };
 

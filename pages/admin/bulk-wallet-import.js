@@ -48,6 +48,7 @@ export default function BulkWalletImport() {
                             onChange={e => setPw(e.target.value)}
                             placeholder="비밀번호"
                             className="mb-4 py-3 text-base"
+                            autoComplete="current-password"
                         />
                         <Button className="w-full py-3 text-base" onClick={handleAuth}>
                             확인

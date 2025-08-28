@@ -97,6 +97,7 @@ export default function PasswordVerify({ walletId, passwordCount, onAllCorrect }
                             value={inputValues[currentStep] || ''}
                             onChange={e => handleInputChange(currentStep, e.target.value)}
                             className="w-72"
+                            autoComplete="current-password"
                         />
                         <Button
                             type="submit"

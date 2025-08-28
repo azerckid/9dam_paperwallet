@@ -85,6 +85,7 @@ const CheckPassword = ({ setAllPasswordsCorrect }) => {
           onChange={(e) => handleInputChange(e.target.value)}
           placeholder={`${currentStep + 1}번 비밀번호`}
           autoFocus
+          autoComplete="current-password"
           className={`${error && "border-[#EF4444] border-2"}`}
         />
         {error && (
@@ -114,6 +115,7 @@ const CheckPassword = ({ setAllPasswordsCorrect }) => {
                 disabled
                 value={inputValues[index] || ""}
                 className="bg-[#DCFCE7] text-[#166534] border-[#BBF7D0] pr-12"
+                autoComplete="current-password"
               />
               <Check className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#166534]" />
             </div>
