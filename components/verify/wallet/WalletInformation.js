@@ -28,16 +28,16 @@ const WalletInformation = () => {
   const { walletInfo, fetchWalletInfo } = useWallet();
 
   useEffect(() => {
-    if (address && address !== walletInfo.address) {
+    if (address && walletInfo && address !== walletInfo.address) {
       fetchWalletInfo(address);
     }
-  }, [address, walletInfo.address, fetchWalletInfo]);
+  }, [address, walletInfo?.address, fetchWalletInfo]);
 
   return (
     <div className="min-h-screen">
       <main className="max-w-4xl min-h-screen container flex flex-col gap-7 md:gap-8 bg-[#F8F9FA] mx-auto py-8 md:py-14 px-8">
-        {walletInfo.isRegistered ? (
-          walletInfo.isProtected && walletInfo.passwordCount === 1 ? (
+        {walletInfo?.isRegistered ? (
+          walletInfo?.isProtected && walletInfo?.passwordCount === 1 ? (
             <>
               {/* 사전 등록됨 */}
               <div>
@@ -172,7 +172,7 @@ const WalletInformation = () => {
                 variant="defaultGreen"
                 size="xl"
                 onClick={() =>
-                  router.push(`/verify/check/${walletInfo.address}`)
+                  walletInfo?.address && router.push(`/verify/check/${walletInfo.address}`)
                 }
               >
                 <SquarePen />
@@ -213,7 +213,7 @@ const WalletInformation = () => {
               variant="defaultGreen"
               size="xl"
               onClick={() =>
-                router.push(`/verify/register/${walletInfo.address}`)
+                walletInfo?.address && router.push(`/verify/register/${walletInfo.address}`)
               }
             >
               <Lock />새 비밀번호 등록하기

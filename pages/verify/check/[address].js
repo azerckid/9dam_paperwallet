@@ -45,4 +45,11 @@ const CheckPwdPage = () => {
   );
 };
 
+// 동적 라우팅 페이지의 정적 생성을 비활성화
+export async function getServerSideProps() {
+  return {
+    props: {}
+  };
+}
+
 export default CheckPwdPage;
