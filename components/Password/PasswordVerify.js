@@ -89,6 +89,8 @@ export default function PasswordVerify({ walletId, passwordCount, onAllCorrect }
         <div className="flex flex-col justify-center items-center gap-4 mt-4">
             {!isAllCorrect && (
                 <form className="flex flex-col items-start gap-2" onSubmit={handlePasswordSubmit}>
+                    {/* 접근성을 위한 숨겨진 username 필드 */}
+                    <input type="text" name="username" autoComplete="username" style={{ display: 'none' }} />
                     <label className="mb-1">{currentStep + 1}/{passwordCount} 비밀번호 확인:</label>
                     <div className="flex flex-row items-center gap-2">
                         <Input

@@ -94,6 +94,8 @@ export default function PasswordAdd({ address, onSuccess, index }) {
                 </div>
             ) : (
                 <form className="flex flex-col items-center gap-2" onSubmit={onSubmit}>
+                    {/* 접근성을 위한 숨겨진 username 필드 */}
+                    <input type="text" name="username" autoComplete="username" style={{ display: 'none' }} />
                     <div className="flex flex-row items-center gap-2">
                         <Input
                             className="w-72 my-2"

@@ -113,13 +113,17 @@ export function WalletProvider({ children }) {
     const now = Date.now();
     if (lastFetchRef.current.address === address &&
       now - lastFetchRef.current.timestamp < 1000) {
-      console.log("중복 호출 방지:", address);
+      if (process.env.NODE_ENV === 'development') {
+        console.log("중복 호출 방지:", address);
+      }
       return walletInfo;
     }
 
     // 이미 로딩 중이면 기존 정보 반환
     if (isLoading) {
-      console.log("이미 로딩 중, 기존 정보 반환");
+      if (process.env.NODE_ENV === 'development') {
+        console.log("이미 로딩 중, 기존 정보 반환");
+      }
       return walletInfo;
     }
 
@@ -128,7 +132,9 @@ export function WalletProvider({ children }) {
     lastFetchRef.current = { address, timestamp: now };
 
     try {
-      console.log("지갑 정보 조회 시작:", address);
+      if (process.env.NODE_ENV === 'development') {
+        console.log("지갑 정보 조회 시작:", address);
+      }
 
       // 1. 비밀번호 개수 (walletId도 함께 가져옴)
       const { passwordCount, lastUpdate, walletId } = await fetchPasswordCount(address);
@@ -157,7 +163,9 @@ export function WalletProvider({ children }) {
         lastUpdate: lastUpdate,
       };
 
-      console.log("지갑 정보 설정됨:", newWalletInfo);
+      if (process.env.NODE_ENV === 'development') {
+        console.log("지갑 정보 설정됨:", newWalletInfo);
+      }
       setWalletInfo(newWalletInfo);
       return newWalletInfo;
     } catch (error) {

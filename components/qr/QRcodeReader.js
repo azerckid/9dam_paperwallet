@@ -95,6 +95,12 @@ export default function Scanner({ getWalletAccount, getNewAccount }) {
             onDecode={(result) => {
               result && setData(result);
             }}
+            onError={(error) => {
+              // 비디오 재생 에러를 조용히 처리
+              if (process.env.NODE_ENV === 'development') {
+                console.log('QR 스캐너 에러:', error);
+              }
+            }}
             className="w-full h-auto"
           />
         </div>

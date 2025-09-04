@@ -75,6 +75,8 @@ export default function PasswordFirstRegister({ address, onSuccess }) {
                 <div className="text-green-600 mt-2">첫 번째 비밀번호가 등록되었습니다.</div>
             ) : (
                 <form className="flex flex-row items-center gap-2" onSubmit={saveSecret}>
+                    {/* 접근성을 위한 숨겨진 username 필드 */}
+                    <input type="text" name="username" autoComplete="username" style={{ display: 'none' }} />
                     <Input
                         className="w-72 my-2"
                         type={showPassword ? "text" : "password"}
