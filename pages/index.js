@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import Center from "@/components/Layout/Center";
 import Header from "@/components/Layout/Header";
@@ -7,7 +7,23 @@ import Footer from "@/components/Layout/Footer";
 import Popup from "@/components/Popup";
 
 export default function Home() {
-  const [showPopup, setShowPopup] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    // localStorage에서 팝업 표시 여부 확인
+    const popupDismissed = localStorage.getItem('popupDismissed');
+    if (!popupDismissed) {
+      setShowPopup(true);
+    }
+  }, []);
+
+  const handlePopupClose = (isOpen) => {
+    setShowPopup(isOpen);
+    if (!isOpen) {
+      // 팝업을 닫으면 localStorage에 저장
+      localStorage.setItem('popupDismissed', 'true');
+    }
+  };
 
   return (
     <>
@@ -23,7 +39,7 @@ export default function Home() {
         <Footer />
       </Center>
 
-      <Popup showPopup={showPopup} setShowPopup={setShowPopup} />
+      <Popup showPopup={showPopup} setShowPopup={handlePopupClose} />
     </>
   );
 }
