@@ -35,7 +35,9 @@ const Popup = ({ showPopup, setShowPopup }) => {
           </p>
           <Card variant="noticeGreen">
             <CardHeader variant="noticeGreen">
-              <CardTitle>🔎 Mobick Shell 소개</CardTitle>
+              <CardTitle>
+                <span>🔎</span> Mobick Shell 소개
+              </CardTitle>
             </CardHeader>
             <CardContent variant="noticeGreen">
               종이지갑 위조 검증 전용 웹페이지입니다.
@@ -58,18 +60,20 @@ const Popup = ({ showPopup, setShowPopup }) => {
           </Card>
           <Card variant="noticeBlue">
             <CardHeader variant="noticeBlue">
-              <CardTitle>🎉 이벤트 참여 방법</CardTitle>
+              <CardTitle>
+                <span>🎉</span> 이벤트 참여 방법
+              </CardTitle>
             </CardHeader>
             <CardContent variant="noticeBlue">
               <div className="flex flex-col justify-center gap-2.5 md:gap-3">
                 <div className="flex gap-2.5 md:gap-3 items-center">
-                  <div className="rounded-full bg-[#3B82F6] w-5 h-5 flex justify-center items-center text-white text-[11px] font-bold">
+                  <div className="rounded-full bg-[#3B82F6] w-5 h-5 md:w-6 md:h-6 flex justify-center items-center text-white text-[11px] md:text-sm font-bold">
                     1
                   </div>
                   mobickshell.com 접속 후 이용해보기
                 </div>
                 <div className="flex gap-2.5 md:gap-3 items-center">
-                  <div className="rounded-full bg-[#3B82F6] w-5 h-5 flex justify-center items-center text-white text-[11px] font-bold">
+                  <div className="rounded-full bg-[#3B82F6] w-5 h-5 md:w-6 md:h-6 flex justify-center items-center text-white text-[11px] md:text-sm font-bold">
                     2
                   </div>
                   구글폼 작성 – EVM 주소 + LTM 주소 입력
@@ -97,7 +101,7 @@ const Popup = ({ showPopup, setShowPopup }) => {
             </Button>
             <Button
               size="lg"
-              className="border border-[#E5E7EB]"
+              className="border-[1px] border-[#E5E7EB]"
               onClick={() => router.push("/verify")}
             >
               <ShieldCheck />
