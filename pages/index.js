@@ -1,10 +1,14 @@
+import { useState } from "react";
 import Head from "next/head";
 import Center from "@/components/Layout/Center";
 import Header from "@/components/Layout/Header";
 import Landing from "@/components/Landing";
 import Footer from "@/components/Layout/Footer";
+import Popup from "@/components/Popup";
 
 export default function Home() {
+  const [showPopup, setShowPopup] = useState(true);
+
   return (
     <>
       <Head>
@@ -18,6 +22,8 @@ export default function Home() {
         <Landing />
         <Footer />
       </Center>
+
+      <Popup showPopup={showPopup} setShowPopup={setShowPopup} />
     </>
   );
 }

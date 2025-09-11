@@ -18,35 +18,41 @@ const cardVariants = cva("rounded-xl border", {
   },
 });
 
-const cardHeaderVariants = cva("flex flex-col space-y-1.5 p-5 md:p-6", {
-  variants: {
-    variant: {
-      default: "text-[#1F2937]",
-      noticeGreen: "text-[#166534]",
-      noticeBlue: "text-[#1E40AF]",
-      destructive: "text-[#DC2626]",
-      warning: "text-[#92400E]",
+const cardHeaderVariants = cva(
+  "flex flex-col space-y-1.5 p-5 md:p-6 md:text-[18px]",
+  {
+    variants: {
+      variant: {
+        default: "text-[#1F2937]",
+        noticeGreen: "text-[#166534]",
+        noticeBlue: "text-[#1E40AF]",
+        destructive: "text-[#DC2626]",
+        warning: "text-[#92400E]",
+      },
     },
-  },
-  defaultVariants: {
-    variant: "default",
-  },
-});
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
 
-const cardContentVariants = cva("text-sm p-5 md:p-6 pt-0 md:pt-0", {
-  variants: {
-    variant: {
-      default: "text-[#1F2937]",
-      noticeGreen: "text-[#166534]",
-      noticeBlue: "text-[#1E3A8A]",
-      destructive: "text-[#7F1D1D]",
-      warning: "text-[#92400E]",
+const cardContentVariants = cva(
+  "text-sm p-5 md:p-6 pt-0 md:pt-0 md:text-[15px] leading-[19px] md:leading-[22px]",
+  {
+    variants: {
+      variant: {
+        default: "text-[#1F2937]",
+        noticeGreen: "text-[#166534]",
+        noticeBlue: "text-[#1E3A8A]",
+        destructive: "text-[#7F1D1D]",
+        warning: "text-[#92400E]",
+      },
     },
-  },
-  defaultVariants: {
-    variant: "default",
-  },
-});
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
 
 const Card = React.forwardRef(({ className, variant, ...props }, ref) => (
   <div
