@@ -46,14 +46,14 @@ const Popup = ({ showPopup, setShowPopup }) => {
               <br />
               비트모빅 생태계의 종이지갑 거래 신뢰성을 지키고자 출시 준비를 하게
               되었습니다.
-              <br />
+              {/* <br />
               <br />
               사용 방법은 안내 영상을 참고해주세요.{" "}
               <span className="mr-1">👉</span>
               <br className="md:hidden" />
               <span className="text-[#05B6A2] font-bold cursor-pointer">
                 www.youtube.com
-              </span>
+              </span> */}
             </CardContent>
           </Card>
           <Card variant="noticeBlue">
@@ -85,7 +85,13 @@ const Popup = ({ showPopup, setShowPopup }) => {
 
         <DialogFooter>
           <div className="flex flex-col md:flex-row justify-center gap-3 md:gap-4">
-            <Button variant="defaultGreen" size="lg">
+            <Button
+              variant="defaultGreen"
+              size="lg"
+              onClick={() =>
+                window.open("https://forms.gle/vtkbhxCCGXnUny7Z9", "_blank")
+              }
+            >
               <ExternalLink />
               참여하기 (Google Form)
             </Button>
