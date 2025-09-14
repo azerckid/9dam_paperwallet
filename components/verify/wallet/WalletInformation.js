@@ -65,8 +65,8 @@ const WalletInformation = () => {
                     이 지갑은 이벤트/고액권 용도로 사전 등록된 보호 지갑입니다.
                   </span>
                   <span>
-                    악의적인 사용자의 무단 등록을 방지하기 위해 MOGA에서 미리
-                    보호 조치를 위했습니다.
+                    악의적인 사용자의 무단 등록을 방지하기 위해 MOBICK SHELL에서
+                    미리 보호 조치를 위했습니다.
                   </span>
                 </CardContent>
               </Card>

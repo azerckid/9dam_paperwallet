@@ -147,7 +147,7 @@ export default function Verification() {
           </div>
 
           <p className="text-[#9CA3AF] text-center mt-8 text-sm md:text-base">
-            MOGA는 MOBICK 종이지갑 기반 위조 검증 시스템입니다.
+            MOBICK SHELL은 MOBICK 종이지갑 기반 위조 검증 시스템입니다.
           </p>
         </div>
       </div>
