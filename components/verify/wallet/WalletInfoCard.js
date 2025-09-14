@@ -10,9 +10,9 @@ const WalletInfoCard = ({ walletInfo }) => {
     <Card>
       <CardHeader>
         <div className="flex items-center space-x-3">
-                  <div
-          className={`flex justify-center items-center w-10 h-10 md:w-12 md:h-12 p-2 bg-[#EFF6FF] text-[#3B82F6] ${walletInfo?.isProtected && walletInfo?.passwordCount == 1 && "bg-[#FEF3C7] text-[#F59E0B]"} rounded-full`}
-        >
+          <div
+            className={`flex justify-center items-center w-10 h-10 md:w-12 md:h-12 p-2 bg-[#EFF6FF] text-[#3B82F6] ${walletInfo?.isProtected && walletInfo?.passwordCount == 1 && "bg-[#FEF3C7] text-[#F59E0B]"} rounded-full`}
+          >
             <Wallet />
           </div>
           <CardTitle className="flex flex-col items-start gap-1">
@@ -31,9 +31,9 @@ const WalletInfoCard = ({ walletInfo }) => {
           <div className="flex justify-between items-center">
             <span className="text-sm md:text-base text-[#6B7280]">잔고:</span>
             <div>
-                          <span className="md:text-lg font-bold">
-              {walletInfo?.balance ?? "0"}{" "}
-            </span>
+              <span className="md:text-lg font-bold">
+                {walletInfo?.balance ?? "0"}{" "}
+              </span>
               <span className="md:text-lg font-bold text-[#05B6A2]">
                 MOBICK
               </span>
@@ -51,7 +51,9 @@ const WalletInfoCard = ({ walletInfo }) => {
                 <span className="text-sm md:text-base text-[#6B7280]">
                   등록 기관:
                 </span>
-                <span className="md:text-lg font-bold">MOGA 관리자</span>
+                <span className="md:text-lg font-bold">
+                  MOBICK SHELL 관리자
+                </span>
               </div>
             </>
           )}

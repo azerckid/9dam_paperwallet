@@ -38,7 +38,7 @@ const Landing = () => {
       <section className="py-8 md:py-24 bg-white">
         <div className="container mx-auto px-8">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-2 md:mb-4">
-            MOGA의 핵심 기능
+            MOBICK SHELL의 핵심 기능
           </h2>
           <p className="text-center mb-8 md:mb-12 text-[#6B7280]">
             종이지갑 검증부터 안전한 거래까지

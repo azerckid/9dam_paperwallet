@@ -65,8 +65,8 @@ const WalletInformation = () => {
                     이 지갑은 이벤트/고액권 용도로 사전 등록된 보호 지갑입니다.
                   </span>
                   <span>
-                    악의적인 사용자의 무단 등록을 방지하기 위해 MOGA에서 미리
-                    보호 조치를 위했습니다.
+                    악의적인 사용자의 무단 등록을 방지하기 위해 MOBICK SHELL에서
+                    미리 보호 조치를 위했습니다.
                   </span>
                 </CardContent>
               </Card>
@@ -172,7 +172,8 @@ const WalletInformation = () => {
                 variant="defaultGreen"
                 size="xl"
                 onClick={() =>
-                  walletInfo?.address && router.push(`/verify/check/${walletInfo.address}`)
+                  walletInfo?.address &&
+                  router.push(`/verify/check/${walletInfo.address}`)
                 }
               >
                 <SquarePen />
@@ -181,12 +182,10 @@ const WalletInformation = () => {
               <Button
                 variant="destructive"
                 size="lg"
-                onClick={() =>
-                  window.open(EXTERNAL_LINKS.YOUTUBE_GUIDE, "_blank")
-                }
+                onClick={() => window.open(EXTERNAL_LINKS.GUIDE, "_blank")}
               >
                 <Play />
-                검증 방법 영상 가이드
+                사용방법 바로가기
               </Button>
             </>
           )
@@ -213,7 +212,8 @@ const WalletInformation = () => {
               variant="defaultGreen"
               size="xl"
               onClick={() =>
-                walletInfo?.address && router.push(`/verify/register/${walletInfo.address}`)
+                walletInfo?.address &&
+                router.push(`/verify/register/${walletInfo.address}`)
               }
             >
               <Lock />새 비밀번호 등록하기
