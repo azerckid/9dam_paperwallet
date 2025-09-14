@@ -27,7 +27,9 @@ const Header = ({ back }) => {
                 height={40}
                 className="w-10 h-10"
               />
-              <span className="text-gray-800 font-semibold text-xl">MOGA</span>
+              <span className="text-gray-800 font-semibold text-xl">
+                MOBICK SHELL
+              </span>
             </div>
           </Link>
         )}
@@ -58,7 +60,9 @@ const Header = ({ back }) => {
                 height={40}
                 className="w-10 h-10"
               />
-              <span className="text-gray-800 font-semibold text-xl">MOGA</span>
+              <span className="text-gray-800 font-semibold text-xl">
+                MOBICK SHELL
+              </span>
             </div>
           </Link>
         )}

@@ -12,8 +12,8 @@ const Footer = () => {
       icon: <MessageCircle />,
     },
     {
-      href: EXTERNAL_LINKS.YOUTUBE_GUIDE,
-      label: "가이드 영상",
+      href: EXTERNAL_LINKS.GUIDE,
+      label: "가이드 문서",
       icon: <Play />,
     },
   ];

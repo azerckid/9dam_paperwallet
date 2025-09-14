@@ -172,7 +172,8 @@ const WalletInformation = () => {
                 variant="defaultGreen"
                 size="xl"
                 onClick={() =>
-                  walletInfo?.address && router.push(`/verify/check/${walletInfo.address}`)
+                  walletInfo?.address &&
+                  router.push(`/verify/check/${walletInfo.address}`)
                 }
               >
                 <SquarePen />
@@ -181,12 +182,10 @@ const WalletInformation = () => {
               <Button
                 variant="destructive"
                 size="lg"
-                onClick={() =>
-                  window.open(EXTERNAL_LINKS.YOUTUBE_GUIDE, "_blank")
-                }
+                onClick={() => window.open(EXTERNAL_LINKS.GUIDE, "_blank")}
               >
                 <Play />
-                검증 방법 영상 가이드
+                사용방법 바로가기
               </Button>
             </>
           )
@@ -213,7 +212,8 @@ const WalletInformation = () => {
               variant="defaultGreen"
               size="xl"
               onClick={() =>
-                walletInfo?.address && router.push(`/verify/register/${walletInfo.address}`)
+                walletInfo?.address &&
+                router.push(`/verify/register/${walletInfo.address}`)
               }
             >
               <Lock />새 비밀번호 등록하기

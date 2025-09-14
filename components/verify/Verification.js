@@ -9,7 +9,13 @@ import Title from "./Title";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Camera, CircleQuestionMark, Play, ShieldCheck, AlertCircle } from "lucide-react";
+import {
+  Camera,
+  CircleQuestionMark,
+  Play,
+  ShieldCheck,
+  AlertCircle,
+} from "lucide-react";
 import { EXTERNAL_LINKS } from "@/lib/constants";
 
 export default function Verification() {
@@ -90,7 +96,10 @@ export default function Verification() {
           </Button>
           {scannerOn && (
             <div className="flex flex-col items-center">
-              <Scanner getWalletAccount={getWalletAccount} getNewAccount={() => { }} />
+              <Scanner
+                getWalletAccount={getWalletAccount}
+                getNewAccount={() => {}}
+              />
             </div>
           )}
 
@@ -131,11 +140,9 @@ export default function Verification() {
               variant="destructive"
               size="xl"
               className="w-full"
-              onClick={() =>
-                window.open(EXTERNAL_LINKS.YOUTUBE_GUIDE, "_blank")
-              }
+              onClick={() => window.open(EXTERNAL_LINKS.GUIDE, "_blank")}
             >
-              <Play /> 유튜브 가이드 영상 보기
+              <Play /> 사용방법 바로가기
             </Button>
           </div>
 
