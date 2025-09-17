@@ -10,18 +10,20 @@ export default function Home() {
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    // localStorage에서 팝업 표시 여부 확인
+    // localStorage에서 마지막 닫은 시간 확인
     const popupDismissed = localStorage.getItem("popupDismissed");
-    if (!popupDismissed) {
+    if (
+      !popupDismissed ||
+      Date.now() - Number(popupDismissed) > 24 * 60 * 60 * 1000
+    ) {
       setShowPopup(true);
     }
   }, []);
 
-  const handlePopupClose = (isOpen) => {
+  const handlePopupClose = (isOpen, oneDay = false) => {
     setShowPopup(isOpen);
-    if (!isOpen) {
-      // 팝업을 닫으면 localStorage에 저장
-      localStorage.setItem("popupDismissed", "true");
+    if (!isOpen && oneDay) {
+      localStorage.setItem("popupDismissed", Date.now().toString());
     }
   };
 

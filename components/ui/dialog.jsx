@@ -31,7 +31,9 @@ const DialogContent = React.forwardRef(
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-2xl translate-x-[-50%] translate-y-[-50%] gap-5 md:gap-6 border bg-background p-5 md:p-8 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] rounded-xl",
+          // "fixed left-[50%] top-[50%] z-50 grid w-[90vw] max-w-[500px] max-h-[90vh] translate-x-[-50%] translate-y-[-50%] gap-5 md:gap-6 border bg-background p-5 md:p-8 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] rounded-xl",
+          "fixed left-[50%] top-[50%] z-50 flex flex-col w-[90vw] max-w-[500px] max-h-[90vh] translate-x-[-50%] translate-y-[-50%] border bg-background p-5 md:p-8 shadow-lg duration-200 rounded-xl",
+
           className
         )}
         {...props}
@@ -56,7 +58,7 @@ const DialogHeader = ({ className, ...props }) => (
 DialogHeader.displayName = "DialogHeader";
 
 const DialogFooter = ({ className, ...props }) => (
-  <div className={cn("flex flex-col gap-6", className)} {...props} />
+  <div className={cn("flex flex-col gap-3 md:gap-4", className)} {...props} />
 );
 DialogFooter.displayName = "DialogFooter";
 
@@ -64,7 +66,7 @@ const DialogTitle = React.forwardRef(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "text-[18px] md:text-lg text-[#1F2937] font-semibold tracking-tight leading-[23px] md:leading-[26px]",
+      "text-base md:text-[18px] text-[#1F2937] font-semibold tracking-tight leading-[23px] md:leading-[26px]",
       className
     )}
     {...props}
@@ -76,7 +78,7 @@ const DialogDescription = React.forwardRef(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
     className={cn(
-      "flex flex-col gap-4 md:gap-5 text-base text-muted-foreground",
+      "flex-1 overflow-auto my-5 md:my-6 flex flex-col gap-4 md:gap-5 text-base text-muted-foreground",
       className
     )}
     {...props}
