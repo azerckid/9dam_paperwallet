@@ -12,7 +12,7 @@ const Footer = () => {
       icon: <MessageCircle />,
     },
     {
-      href: EXTERNAL_LINKS.GUIDE,
+      href: EXTERNAL_LINKS.GUIDE_0,
       label: "가이드 문서",
       icon: <Play />,
     },
