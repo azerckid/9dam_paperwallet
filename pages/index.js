@@ -4,28 +4,28 @@ import Center from "@/components/Layout/Center";
 import Header from "@/components/Layout/Header";
 import Landing from "@/components/Landing";
 import Footer from "@/components/Layout/Footer";
-import Popup from "@/components/Popup";
+// import Popup from "@/components/Popup";
 
 export default function Home() {
-  const [showPopup, setShowPopup] = useState(false);
+  // const [showPopup, setShowPopup] = useState(false);
 
-  useEffect(() => {
-    // localStorage에서 마지막 닫은 시간 확인
-    const popupDismissed = localStorage.getItem("popupDismissed");
-    if (
-      !popupDismissed ||
-      Date.now() - Number(popupDismissed) > 24 * 60 * 60 * 1000
-    ) {
-      setShowPopup(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   // localStorage에서 마지막 닫은 시간 확인
+  //   const popupDismissed = localStorage.getItem("popupDismissed");
+  //   if (
+  //     !popupDismissed ||
+  //     Date.now() - Number(popupDismissed) > 24 * 60 * 60 * 1000
+  //   ) {
+  //     setShowPopup(true);
+  //   }
+  // }, []);
 
-  const handlePopupClose = (isOpen, oneDay = false) => {
-    setShowPopup(isOpen);
-    if (!isOpen && oneDay) {
-      localStorage.setItem("popupDismissed", Date.now().toString());
-    }
-  };
+  // const handlePopupClose = (isOpen, oneDay = false) => {
+  //   setShowPopup(isOpen);
+  //   if (!isOpen && oneDay) {
+  //     localStorage.setItem("popupDismissed", Date.now().toString());
+  //   }
+  // };
 
   return (
     <>
@@ -41,7 +41,7 @@ export default function Home() {
         <Footer />
       </Center>
 
-      <Popup showPopup={showPopup} setShowPopup={handlePopupClose} />
+      {/* <Popup showPopup={showPopup} setShowPopup={handlePopupClose} /> */}
     </>
   );
 }
