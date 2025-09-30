@@ -140,7 +140,7 @@ export default function Verification() {
               variant="destructive"
               size="xl"
               className="w-full"
-              onClick={() => window.open(EXTERNAL_LINKS.GUIDE, "_blank")}
+              onClick={() => window.open(EXTERNAL_LINKS.GUIDE_0, "_blank")}
             >
               <Play /> 사용방법 바로가기
             </Button>

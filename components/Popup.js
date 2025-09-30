@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { ExternalLink, ShieldCheck } from "lucide-react";
+import { Shield } from "lucide-react";
 
 const Popup = ({ showPopup, setShowPopup }) => {
   const router = useRouter();
@@ -21,69 +21,98 @@ const Popup = ({ showPopup, setShowPopup }) => {
     <Dialog open={showPopup} onOpenChange={setShowPopup}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            📢 춘심 심부름센터 2주년 기념 & 위조검증 웹 베타 공개
-          </DialogTitle>
+          <DialogTitle>🎉 춘심 2주년 & Mobick Shell 오픈</DialogTitle>
         </DialogHeader>
 
         <DialogDescription>
-          <p className="text-[#4B5563] text-[14px] md:text-base leading-[21px]">
-            안녕하세요, 춘심 팀입니다.
-            <br />
-            2023년 9월부터 시작한 춘심 심부름센터가 어느새 2주년을 맞이했습니다.
-            <br />
-            그동안 함께해주신 모든 분들께 진심으로 감사드립니다. 🙏
+          <p className="text-[#4B5563] text-[13px] md:text-[15px] leading-[20px] md:leading-[22px]">
+            저희 춘심팀이 2주년을 맞아 종이지갑 위조 검증 플랫폼 Mobick Shell
+            베타 버전을 공개합니다.
+          </p>
+          <p
+            className="text-[#4B5563] text-[13px] md:text-[14px] font-[700] text-right underline cursor-pointer"
+            onClick={() => window.open(EXTERNAL_LINKS.INTRODUCE, "_blank")}
+          >
+            소개서(GitBook) 바로가기
           </p>
           <Card variant="noticeGreen">
             <CardHeader variant="noticeGreen">
-              <CardTitle>
+              <CardTitle className="text-[15px] md:text-base">
                 <span>🔎</span> Mobick Shell 소개
               </CardTitle>
             </CardHeader>
-            <CardContent variant="noticeGreen">
-              종이지갑 위조 검증 전용 웹페이지입니다.
-              <br />
-              실물 지갑과 플랫폼 상 동일한 비밀번호를 유지하며, 시중에 위조 지갑
-              수량을 최소화하는 솔루션입니다.
-              <br />
-              <br />
+            <CardContent variant="noticeGreen" className="text-xs md:text-sm">
               비트모빅 생태계의 종이지갑 거래 신뢰성을 지키고자 출시 준비를 하게
               되었습니다.
               <br />
               <br />
-              사용 방법은 가이드 문서를 참고해주세요.{" "}
-              <span className="mr-1">👉</span>
+              사용 방법은 안내 링크를 참고해주세요.
+              <br />
               <span
-                className="text-[#05B6A2] font-bold cursor-pointer hover:underline"
-                onClick={() => window.open(EXTERNAL_LINKS.GUIDE, "_blank")}
+                className="block text-[#05B6A2] w-full font-bold cursor-pointer text-right underline"
+                onClick={() => window.open(EXTERNAL_LINKS.GUIDE_1, "_blank")}
               >
-                사용방법 바로가기
+                👉 사용방법 바로가기
               </span>
             </CardContent>
           </Card>
           <Card variant="noticeBlue">
             <CardHeader variant="noticeBlue">
-              <CardTitle>
+              <CardTitle className="text-[15px] md:text-base">
                 <span>🎉</span> 이벤트 참여 방법
               </CardTitle>
             </CardHeader>
-            <CardContent variant="noticeBlue">
-              <div className="flex flex-col justify-center gap-2.5 md:gap-3">
-                <div className="flex gap-2.5 md:gap-3 items-center">
+            <CardContent variant="noticeBlue" className="text-xs md:text-sm">
+              <div className="flex flex-col justify-center gap-2.5 md:gap-3 overflow-x-auto">
+                <div className="flex gap-2.5 md:gap-3 items-center min-w-max">
                   <div className="rounded-full bg-[#3B82F6] w-5 h-5 md:w-6 md:h-6 flex justify-center items-center text-white text-[11px] md:text-sm font-bold">
                     1
                   </div>
-                  mobickshell.com 접속 후 이용해보기
+                  <span
+                    className="font-[700] underline cursor-pointer whitespace-nowrap"
+                    onClick={() =>
+                      window.open("https://www.mobickshell.com/", "_blank")
+                    }
+                  >
+                    mobickshell.com
+                  </span>
+                  <span className="whitespace-nowrap">접속 후 이용해보기</span>
                 </div>
-                <div className="flex gap-2.5 md:gap-3 items-center">
+                <div className="flex gap-2.5 md:gap-3 items-center min-w-max">
                   <div className="rounded-full bg-[#3B82F6] w-5 h-5 md:w-6 md:h-6 flex justify-center items-center text-white text-[11px] md:text-sm font-bold">
                     2
                   </div>
-                  구글폼 작성 – EVM 주소 + LTM 주소 입력
+                  <span
+                    className="font-[700] underline cursor-pointer whitespace-nowrap"
+                    onClick={() =>
+                      window.open("https://open.kakao.com/o/gq3NvqFf", "_blank")
+                    }
+                  >
+                    춘심 카카오톡방
+                  </span>
+                  <span className="whitespace-nowrap">입장</span>
                 </div>
-                <div className="flex flex-col gap-1.5 font-bold text-[#92400E] rounded-lg border-[1px] border-[#FDE68A] bg-[#FEF3C7] p-2.5">
-                  📅 이벤트 기간:
-                  <span className="text-center">9월 15일 ~ 9월 21일</span>
+                <div className="flex gap-2.5 md:gap-3 items-center min-w-max">
+                  <div className="rounded-full bg-[#3B82F6] w-5 h-5 md:w-6 md:h-6 flex justify-center items-center text-white text-[11px] md:text-sm font-bold">
+                    3
+                  </div>
+                  <span
+                    className="font-[700] underline cursor-pointer whitespace-nowrap"
+                    onClick={() =>
+                      window.open(
+                        "https://forms.gle/vtkbhxCCGXnUny7Z9",
+                        "_blank"
+                      )
+                    }
+                  >
+                    구글 폼 작성
+                  </span>
+                  <span className="whitespace-nowrap">
+                    – EVM 주소 + LTM 주소 입력
+                  </span>
+                </div>
+                <div className="font-bold text-[#92400E] rounded-lg border-[1px] border-[#FDE68A] bg-[#FEF3C7] p-2.5">
+                  📅 이벤트 기간: 9월 15일 ~ 9월 21일
                 </div>
               </div>
             </CardContent>
@@ -91,28 +120,26 @@ const Popup = ({ showPopup, setShowPopup }) => {
         </DialogDescription>
 
         <DialogFooter>
-          <div className="flex flex-col md:flex-row justify-center gap-3 md:gap-4">
+          <div className="flex md:flex-row justify-center gap-3 md:gap-4">
             <Button
-              variant="defaultGreen"
-              size="lg"
-              onClick={() => window.open(EXTERNAL_LINKS.GOOGLE_FORM, "_blank")}
-            >
-              <ExternalLink />
-              참여하기 (Google Form)
-            </Button>
-            <Button
-              size="lg"
-              className="border-[1px] border-[#E5E7EB]"
+              className="text-[13px] md:text-sm border-[1px] border-[#E5E7EB] font-[900] shadow-none"
               onClick={() => router.push("/verify")}
             >
-              <ShieldCheck />
+              <Shield />
               지금 검증하기
             </Button>
+            <Button
+              className="text-[13px] md:text-sm text-[#6B7280] shadow-none border-[1px] border-[#E5E7EB]"
+              onClick={() => setShowPopup(false)}
+            >
+              닫기
+            </Button>
           </div>
-          <p className="text-center text-[#9CA3AF] text-[11px] md:text-[13px]">
-            앞으로도 변함없이 신뢰받는 춘심 팀이 되겠습니다.
-            <br />
-            감사합니다. 🙇‍♂️
+          <p
+            className="cursor-pointer text-center text-[#9CA3AF] text-[11px] underline md:text-xs"
+            onClick={() => setShowPopup(false, true)}
+          >
+            오늘 하루 보지않기
           </p>
         </DialogFooter>
       </DialogContent>
